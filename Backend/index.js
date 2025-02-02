@@ -16,6 +16,7 @@ mongoose
   })
   .catch((err) => console.log("error", err.message));
 
+//Middleware
 app.use(cookieParser());
 app.use(express.json());
 
@@ -32,6 +33,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(3300, () => {
+app.listen(8800, () => {
   console.log("Port is running on Localhost : 8800");
 });

@@ -43,7 +43,6 @@ export const signin = async (req, res, next) => {
     //Retrive data except password
     const { password, ...other } = user._doc;
 
-    //Sending a token with a cookie
     res
       .cookie("access_token", token, {
         httpOnly: true,

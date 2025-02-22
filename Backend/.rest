@@ -20,3 +20,26 @@ Content-Type:application/json
   "email":"TestNew4kmd@.edu.mm",
   "password": "123456"
 }
+
+
+###
+GET http://localhost:8800/api/admin/getAdmin
+Content-Type:application/json
+
+
+
+######
+POST  http://localhost:8800/api/admin/createAdmin
+Content-Type:application/json
+
+{
+
+  "Username": "admin4",
+  "Password": "securepassword",
+  "FullName": "Admin One",
+  "Email": "admin4@example.com",
+  "Role": "SuperAdmin",
+  "PhoneNumber": "09799142280",
+  "Status" : true
+
+}

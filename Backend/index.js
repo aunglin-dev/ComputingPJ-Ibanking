@@ -2,30 +2,30 @@ import AuthRouter from "./Routes/auth.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import express from "express";
-import cookieParser from "cookie-parser";
-
-dotenv.config();
+import bodyParser from "body-parser";
+import adminRouter from "./Routes/admin.js";
 
 const app = express();
+const port = 8800;
 
-//Connection TO Database
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log("ok");
-  })
-  .catch((err) => console.log("error", err.message));
+import cookieParser from "cookie-parser";
+// import { connect } from "../Backend/config.js";const { connect } = import("./db.js");
+import { connect } from "./config.js";
+import cors from "cors";
 
-//Middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(cookieParser());
+app.use(cors());
 app.use(express.json());
 
 //Routers
-app.use("/api/auth", AuthRouter);
+app.use("/api/admin", adminRouter);
 
 app.use((err, req, res, next) => {
   const status = err.status || 500;
-  const message = err.message || "Something's wrong";
+  const message = err.message || "Something went wrong.";
   res.status(status).json({
     success: false,
     status,
@@ -33,6 +33,15 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(8800, () => {
-  console.log("Port is running on Localhost : 8800");
+connect()
+  .then((connection) => {
+    console.log("Connected to the database.");
+  })
+  .catch((error) => {
+    console.log("Database connection failed!");
+    console.log(error);
+  });
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
 });

@@ -1,6 +1,8 @@
 import { Sequelize } from "sequelize";
 import Admin from "./Model/admin.js";
 import User from "./Model/User.js";
+import CustomerAccount from "./Model/CustomerAccount.js";
+import AccountTypes from "./Model/AccountTypes.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -24,6 +26,8 @@ const sequelize = new Sequelize(
 const db = {};
 db.Admin = Admin(sequelize);
 db.User = User(sequelize);
+db.CustomerAccount = CustomerAccount(sequelize);
+db.AccountTypes = AccountTypes(sequelize);
 
 const initDB = async () => {
   try {

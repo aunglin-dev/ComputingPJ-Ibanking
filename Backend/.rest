@@ -93,3 +93,15 @@ Content-Type:application/json
  "UserId": 2,
   "UserType": "Requested"
 }
+
+
+
+####
+POST http://localhost:8800/api/accountTypes/createAccountType
+Content-Type:application/json
+
+{
+  "ProductName" : "Special Call Deposit Account",
+   "CategoryGroup": "Fixed Deposits",
+  "MinimumBalance": 1000000.00
+}

@@ -15,7 +15,7 @@ export default (sequelize) => {
       },
       Password: {
         type: DataTypes.STRING(225),
-        allowNull: false,
+        allowNull: true,
       },
       FullName: {
         type: DataTypes.STRING(225),

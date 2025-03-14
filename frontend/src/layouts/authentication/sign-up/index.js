@@ -12,6 +12,7 @@ import MDButton from "components/MDButton";
 import { useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
+import { useForm, Controller } from "react-hook-form";
 
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
@@ -24,6 +25,17 @@ function Cover() {
   const [selectedValues, setSelectedValues] = useState([]);
   const options = ["Savings Account", "Checking Account", "Business Account", "Student Account"];
   const Gender = ["Male", "Female"];
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data) => {
+    console.log("Form Data:", data);
+    // Handle form submission (e.g., send data to an API)
+  };
 
   return (
     <CoverLayout image={bgImage}>
@@ -47,131 +59,296 @@ function Cover() {
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form">
+          <MDBox component="form" role="form" onSubmit={handleSubmit(onSubmit)}>
             <MDBox mb={2}>
-              <Autocomplete
-                multiple
-                options={options}
-                value={selectedValues}
-                onChange={(event, newValue) => {
-                  setSelectedValues(newValue);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Type Of Account"
-                    variant="standard"
-                    fullWidth
-                    placeholder="Select or enter account types"
+              <Controller
+                name="accountType"
+                control={control}
+                defaultValue={["Current Account"]} // Set default value
+                rules={{ required: "Account Type is required" }}
+                render={({ field }) => (
+                  <Autocomplete
+                    multiple
+                    options={options}
+                    value={field.value}
+                    onChange={(event, newValue) => {
+                      // Prevent removal of "Current Account"
+                      if (!newValue.includes("Current Account")) {
+                        newValue.push("Current Account");
+                      }
+                      field.onChange(newValue);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Type Of Account"
+                        variant="standard"
+                        fullWidth
+                        placeholder="Select or enter account types"
+                      />
+                    )}
+                    renderTags={(value, getTagProps) =>
+                      value.map((option, key) => (
+                        <Chip
+                          key={key}
+                          label={option}
+                          {...getTagProps({ key })}
+                          color="primary"
+                          size="small"
+                          onDelete={
+                            option === "Current Account" ? undefined : getTagProps({ key }).onDelete
+                          } // Disable delete for "Current Account"
+                        />
+                      ))
+                    }
+                    freeSolo
                   />
                 )}
-                renderTags={(value, getTagProps) =>
-                  value.map((option, key) => (
-                    <Chip
-                      key={key} // Add the key prop here
-                      label={option}
-                      {...getTagProps({ key })} // Pass index to getTagProps
-                      color="primary" // Customize chip color
-                      size="small" // Customize chip size
-                    />
-                  ))
-                }
-                freeSolo
               />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="text" label="UserName" variant="standard" fullWidth />
+              <Controller
+                name="username"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Username is required" }}
+                render={({ field }) => (
+                  <MDInput
+                    {...field}
+                    type="text"
+                    label="Username"
+                    variant="standard"
+                    fullWidth
+                    error={!!errors.username}
+                    helperText={errors.username?.message}
+                  />
+                )}
+              />
             </MDBox>
-            <MDBox mb={2}>
-              <MDInput type="email" label="Email" variant="standard" fullWidth />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput type="text" label="FullName" variant="standard" fullWidth />
-            </MDBox>
-            <MDBox mb={2}>
-              {/* <MDInput type="text" label="NRC" variant="standard" fullWidth /> */}
 
+            <MDBox mb={2}>
+              <Controller
+                name="email"
+                control={control}
+                defaultValue=""
+                rules={{
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address",
+                  },
+                }}
+                render={({ field }) => (
+                  <MDInput
+                    {...field}
+                    type="email"
+                    label="Email"
+                    variant="standard"
+                    fullWidth
+                    error={!!errors.email}
+                    helperText={errors.email?.message}
+                  />
+                )}
+              />
+            </MDBox>
+
+            <MDBox mb={2}>
+              <Controller
+                name="fullName"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Full Name is required" }}
+                render={({ field }) => (
+                  <MDInput
+                    {...field}
+                    type="text"
+                    label="Full Name"
+                    variant="standard"
+                    fullWidth
+                    error={!!errors.fullName}
+                    helperText={errors.fullName?.message}
+                  />
+                )}
+              />
+            </MDBox>
+
+            <MDBox mb={2}>
               <Grid container spacing={2} alignItems="center">
-                {/* Region Input */}
                 <Grid item xs={12} sm={4}>
-                  <MDInput
-                    type="text"
-                    label="Region"
-                    variant="standard"
-                    fullWidth
-                    // value={region}
-                    // onChange={(e) => setRegion(e.target.value)}
-                    // onBlur={handleBlur}
-                    placeholder="12"
+                  <Controller
+                    name="region"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: "Region is required" }}
+                    render={({ field }) => (
+                      <MDInput
+                        {...field}
+                        type="text"
+                        label="Region"
+                        variant="standard"
+                        fullWidth
+                        placeholder="12"
+                        error={!!errors.region}
+                        helperText={errors.region?.message}
+                      />
+                    )}
                   />
                 </Grid>
-
-                {/* Township Input */}
                 <Grid item xs={12} sm={4}>
-                  <MDInput
-                    type="text"
-                    label="Township"
-                    variant="standard"
-                    fullWidth
-                    // value={township}
-                    // onChange={(e) => setTownship(e.target.value)}
-                    // onBlur={handleBlur}
-                    placeholder="KAMAYA"
+                  <Controller
+                    name="township"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: "Township is required" }}
+                    render={({ field }) => (
+                      <MDInput
+                        {...field}
+                        type="text"
+                        label="Township"
+                        variant="standard"
+                        fullWidth
+                        placeholder="KAMAYA"
+                        error={!!errors.township}
+                        helperText={errors.township?.message}
+                      />
+                    )}
                   />
                 </Grid>
-
-                {/* Unique Identifier Input */}
                 <Grid item xs={12} sm={4}>
-                  <MDInput
-                    type="text"
-                    label="Unique Identifier"
-                    variant="standard"
-                    fullWidth
-                    // value={uniqueId}
-                    // onChange={(e) => setUniqueId(e.target.value)}
-                    // onBlur={handleBlur}
-                    placeholder="239833"
+                  <Controller
+                    name="uniqueId"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: "Unique Identifier is required" }}
+                    render={({ field }) => (
+                      <MDInput
+                        {...field}
+                        type="text"
+                        label="Unique Identifier"
+                        variant="standard"
+                        fullWidth
+                        placeholder="239833"
+                        error={!!errors.uniqueId}
+                        helperText={errors.uniqueId?.message}
+                      />
+                    )}
                   />
                 </Grid>
               </Grid>
             </MDBox>
-            <MDBox mb={2}>
-              {/* <MDInput type="date" label="Date Of Birth" variant="standard" fullWidth /> */}
 
-              <MDInput
-                type="date"
-                label="Date Of Birth"
-                variant="standard"
-                fullWidth
-                value={date}
-                sx={{
-                  "&::-webkit-datetime-edit": {
-                    visibility: "hidden", // Hide the default placeholder
-                  },
-                }}
+            <MDBox mb={2}>
+              <Controller
+                name="dateOfBirth"
+                control={control}
+                defaultValue="0001-01-01"
+                rules={{ required: "Date of Birth is required" }}
+                render={({ field }) => (
+                  <MDInput
+                    {...field}
+                    type="date"
+                    label="Date Of Birth"
+                    variant="standard"
+                    fullWidth
+                    error={!!errors.dateOfBirth}
+                    helperText={errors.dateOfBirth?.message}
+                  />
+                )}
               />
             </MDBox>
+
             <MDBox mb={2}>
-              <MDInput type="text" label="Company" variant="standard" fullWidth />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput type="text" label="PhoneNumber" variant="standard" fullWidth />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput type="text" label="Address" variant="standard" fullWidth />
-            </MDBox>
-            <MDBox mb={2}>
-              <Autocomplete
-                options={Gender}
-                renderInput={(params) => (
-                  <TextField {...params} label="Gender" variant="standard" fullWidth />
+              <Controller
+                name="company"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <MDInput {...field} type="text" label="Company" variant="standard" fullWidth />
                 )}
-                freeSolo
+              />
+            </MDBox>
+
+            <MDBox mb={2}>
+              <Controller
+                name="phoneNumber"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Phone Number is required" }}
+                render={({ field }) => (
+                  <MDInput
+                    {...field}
+                    type="text"
+                    label="Phone Number"
+                    variant="standard"
+                    fullWidth
+                    error={!!errors.phoneNumber}
+                    helperText={errors.phoneNumber?.message}
+                  />
+                )}
+              />
+            </MDBox>
+
+            <MDBox mb={2}>
+              <Controller
+                name="address"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Address is required" }}
+                render={({ field }) => (
+                  <MDInput
+                    {...field}
+                    type="text"
+                    label="Address"
+                    variant="standard"
+                    fullWidth
+                    error={!!errors.address}
+                    helperText={errors.address?.message}
+                  />
+                )}
+              />
+            </MDBox>
+
+            <MDBox mb={2}>
+              <Controller
+                name="gender"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Gender is required" }}
+                render={({ field }) => (
+                  <Autocomplete
+                    options={Gender}
+                    value={field.value}
+                    onChange={(event, newValue) => field.onChange(newValue)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Gender"
+                        variant="standard"
+                        fullWidth
+                        error={!!errors.gender}
+                        helperText={errors.gender?.message}
+                      />
+                    )}
+                    freeSolo
+                  />
+                )}
               />
             </MDBox>
 
             <MDBox display="flex" alignItems="center" ml={-1}>
-              <Checkbox />
+              <Controller
+                name="terms"
+                control={control}
+                defaultValue={false}
+                rules={{ required: "You must agree to the terms and conditions" }}
+                render={({ field }) => (
+                  <Checkbox
+                    {...field}
+                    checked={field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  />
+                )}
+              />
               <MDTypography
                 variant="button"
                 fontWeight="regular"
@@ -190,12 +367,20 @@ function Cover() {
               >
                 Terms and Conditions
               </MDTypography>
+              {/* Display validation error message */}
+              {errors.terms && (
+                <MDTypography variant="caption" color="error" sx={{ ml: 1 }}>
+                  {errors.terms.message}
+                </MDTypography>
+              )}
             </MDBox>
+
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
+              <MDButton type="submit" variant="gradient" color="info" fullWidth>
                 Request Account
               </MDButton>
             </MDBox>
+
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
                 Already have an account?{" "}

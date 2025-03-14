@@ -5,6 +5,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import adminRouter from "./Routes/admin.js";
 import userRouter from "./Routes/users.js";
+import accountTypeRouter from "./Routes/accountTypes.js";
 
 const app = express();
 const port = 8800;
@@ -24,11 +25,12 @@ app.use(express.json());
 //Routers
 app.use("/api/admin", adminRouter);
 app.use("/api/user", userRouter);
+app.use("/api/accountTypes", accountTypeRouter);
 
 app.use((err, req, res, next) => {
   const status = err.status || 500;
   const message = err.message || "Something went wrong.";
-  
+
   res.status(status).json({
     success: false,
     status,

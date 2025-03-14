@@ -27,7 +27,6 @@ GET http://localhost:8800/api/admin/getAdmin
 Content-Type:application/json
 
 
-
 ######
 POST  http://localhost:8800/api/admin/createAdmin
 Content-Type:application/json
@@ -42,4 +41,55 @@ Content-Type:application/json
   "PhoneNumber": "09799142280",
   "Status" : true
 
+}
+
+#######
+
+POST  http://localhost:8800/api/admin/adminSigin
+Content-Type:application/json
+
+{
+
+  "Email": "admin4@example.com",
+  "Password": "securepassword"
+
+
+
+
+}
+
+
+###
+GET http://localhost:8800/api/user/getUsers
+Content-Type:application/json
+
+
+
+####
+POST http://localhost:8800/api/user/signup
+Content-Type:application/json
+
+{
+  "UserName": "john_doe",
+  "FullName": "John Doe",
+  "NRC": "123456789",
+   "DateOfBirth": "1990-01-01",
+  "PhoneNumber": "09799142280",
+  "ProfilePhotoPath": "/path/to/photo.jpg",
+  "Email": "aunglin2252003@gmai.com",
+  "CIFID": "CIF123456789",
+  "Address": "123 Main St, City, Country",
+  "Gender": "Male",
+  "UserType": "Requested",
+  "Password": "securepassword123"
+}
+
+
+#####
+Put http://localhost:8800/api/user/ApproveUser
+Content-Type:application/json
+
+{
+ "UserId": 2,
+  "UserType": "Requested"
 }

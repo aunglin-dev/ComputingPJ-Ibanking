@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllAdmins, createAdmin } from "../Controller/admin.js";
+import { getAllAdmins, createAdmin, Adminsignin } from "../Controller/admin.js";
 
 const Router = express.Router();
 
@@ -7,5 +7,7 @@ const Router = express.Router();
 Router.get("/getAdmin", getAllAdmins);
 
 Router.post("/createAdmin", createAdmin);
+
+Router.post("/adminSigin", Adminsignin);
 
 export default Router;

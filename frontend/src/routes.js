@@ -21,7 +21,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Tables",
+    name: "Customer Lists",
     key: "tables",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/tables",

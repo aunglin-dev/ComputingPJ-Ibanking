@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import Admin from "./Model/admin.js";
+import User from "./Model/User.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -22,6 +23,7 @@ const sequelize = new Sequelize(
 
 const db = {};
 db.Admin = Admin(sequelize);
+db.User = User(sequelize);
 
 const initDB = async () => {
   try {

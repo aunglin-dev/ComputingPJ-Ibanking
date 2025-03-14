@@ -1,5 +1,6 @@
 import { db } from "../config.js";
 import bcrypt from "bcryptjs";
+import Jwt from "jsonwebtoken";
 
 export const getAllAdmins = async (req, res) => {
   try {
@@ -48,5 +49,40 @@ export const createAdmin = async (adminData, res) => {
     return newAdmin;
   } catch (error) {
     throw new Error(error.message);
+  }
+};
+
+export const Adminsignin = async (req, res, next) => {
+  try {
+    const { Email, Password } = req.body;
+    console.log(Email, Password);
+
+    const user = await db.Admin.findOne({ where: { Email } });
+
+    if (!user) {
+      return next(ErrorHandler(400, "Invalid Username or Password"));
+    }
+
+    const passwordCorrect = await bcrypt.compare(Password, user.PasswordHash);
+
+    if (!passwordCorrect) {
+      return next(ErrorHandler(400, "Invalid Username or Password"));
+    }
+
+    // Create a token
+    const Usertoken = { name: user.name, id: user.id };
+    const token = Jwt.sign(Usertoken, process.env.SECRET);
+
+    const { PasswordHash: _, ...other } = user.dataValues;
+
+    // Set cookie and return user data
+    res
+      .cookie("access_token", token, {
+        httpOnly: true,
+      })
+      .status(200)
+      .json(other);
+  } catch (err) {
+    next(err);
   }
 };

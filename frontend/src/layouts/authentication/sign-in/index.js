@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useState } from "react";
 
 // react-router-dom components
@@ -34,15 +19,45 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
+import { useNavigate } from "react-router-dom";
 
 // Authentication layout components
 import BasicLayout from "layouts/authentication/components/BasicLayout";
+import { useDispatch } from "react-redux";
+import { loginStart, loginFailure, loginSuccess } from "./../../../Storage/admin";
+import axios from "axios";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
+  const [email, setEmail] = useState(""); // State to store email
+  const [password, setPassword] = useState(""); // State to store password
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    console.log("Email: ", email);
+    console.log("Password: ", password);
+    dispatch(loginStart());
+    const res = await axios.post("/admin/adminSigin", {
+      Email: email,
+      Password: password,
+    });
+
+    if (res.status == 200) {
+      window.alert("Welcome From SMEDB I-Banking System ");
+      console.log(res.data);
+      dispatch(loginSuccess(res.data));
+
+      navigate("/dashboard");
+    }
+
+    // Handle the response (e.g., login success/failure)
+  };
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
@@ -63,31 +78,26 @@ function Basic() {
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
             Sign in
           </MDTypography>
-          <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <FacebookIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GitHubIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GoogleIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-          </Grid>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form">
+          <MDBox component="form" role="form" onSubmit={onSubmit}>
             <MDBox mb={2}>
-              <MDInput type="email" label="Email" fullWidth />
+              <MDInput
+                type="email"
+                label="Email"
+                fullWidth
+                value={email} // Bind email state to the input
+                onChange={(e) => setEmail(e.target.value)} // Update email state
+              />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" fullWidth />
+              <MDInput
+                type="password"
+                label="Password"
+                fullWidth
+                value={password} // Bind password state to the input
+                onChange={(e) => setPassword(e.target.value)} // Update password state
+              />
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -98,12 +108,12 @@ function Basic() {
                 onClick={handleSetRememberMe}
                 sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
               >
-                &nbsp;&nbsp;Remember me
+                &nbsp;&nbsp;Remember u
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
-                sign in
+              <MDButton type="submit" variant="gradient" color="info" fullWidth>
+                Sign in
               </MDButton>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">

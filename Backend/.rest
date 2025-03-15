@@ -63,6 +63,9 @@ Content-Type:application/json
 GET http://localhost:8800/api/user/getUsers
 Content-Type:application/json
 
+###
+GET http://localhost:8800/api/accountTypes/getAccountType
+Content-Type:application/json
 
 
 ####
@@ -70,7 +73,7 @@ POST http://localhost:8800/api/user/signup
 Content-Type:application/json
 
 {
-  "UserName": "john_doe",
+  "UserName": "johnksdoe",
   "FullName": "John Doe",
   "NRC": "123456789",
    "DateOfBirth": "1990-01-01",
@@ -83,7 +86,25 @@ Content-Type:application/json
   "UserType": "Requested",
   "Password": "securepassword123"
 }
+####
+POST http://localhost:8800/api/user/requestUserAccount
+Content-Type:application/json
 
+{
+  "username": "john_doe",
+  "fullName": "John Doe",
+  "NRC": "123456789",
+   "dateOfBirth": "1990-01-01",
+  "phoneNumber": "09799142280",
+  "email": "aunglin2252003@gmai.com",
+  
+  "address": "123 Main St, City, Country",
+  "gender": "Male",
+  
+  "accountType" : ["Current Account", "Special Savings Deposit Account", "Special Call Deposit Account"]
+  
+  
+}
 
 #####
 Put http://localhost:8800/api/user/ApproveUser

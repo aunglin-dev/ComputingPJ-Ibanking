@@ -1,5 +1,19 @@
 import { db } from "../config.js";
 
+export const getAllAccountTypes = async (req, res) => {
+  try {
+    const accounts = await db.AccountTypes.findAll();
+
+    res.status(200).json({
+      message: "Accounts Retrieve successfully",
+      data: accounts,
+    });
+  } catch (error) {
+    console.error("Error fetching Accounts:", error);
+    throw error;
+  }
+};
+
 export const createAccountType = async (accDat, res) => {
   try {
     const { ProductName, CategoryGroup, MinimumBalance } = accDat.body;

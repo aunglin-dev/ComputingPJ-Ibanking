@@ -104,12 +104,23 @@ export default function data() {
       </MDTypography>
     ),
     action: (
-      <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-        <Badge onClick={() => btnApprove(user.UserId)} disable={true}>
-          Approve 
-        </Badge>
-      </MDTypography>
+      <>
+        {user.UserType !== "Registered" ? (
+          <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
+            <Badge onClick={() => btnApprove(user.UserId)} disable={true}>
+              Approve
+            </Badge>
+          </MDTypography>
+        ) : (
+          <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
+            <Badge onClick={() => btnLock(user.UserId)} disable={true}>
+              Lock
+            </Badge>
+          </MDTypography>
+        )}
+      </>
     ),
+
     Gender: (
       <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
         {user.Gender}

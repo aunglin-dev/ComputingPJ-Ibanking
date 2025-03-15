@@ -9,7 +9,7 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { useForm, Controller } from "react-hook-form";
@@ -19,22 +19,75 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
+import axios from "axios";
 
 function Cover() {
   const [date, setDate] = useState("0001-01-01");
   const [selectedValues, setSelectedValues] = useState([]);
-  const options = ["Savings Account", "Checking Account", "Business Account", "Student Account"];
+
   const Gender = ["Male", "Female"];
+  const [accounts, setAccounts] = useState([]);
+
+  //Fetch Accounts
+  const fetchAccounts = async () => {
+    const resAccount = await axios.get("/accountTypes/getAccountType");
+    console.log(resAccount);
+    console.log(resAccount.data.data);
+    setAccounts(resAccount.data.data);
+    console.log("retrieve data", accounts.data);
+  };
+
+  useEffect(() => {
+    fetchAccounts();
+  }, []);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-    // Handle form submission (e.g., send data to an API)
+  const onSubmit = async (data) => {
+    try {
+      console.log("Form Data:", data);
+      const res = await axios.post("/user/requestUserAccount", {
+        username: data.username,
+        fullName: data.fullName,
+        NRC: `${data.region}/${data.township}/${data.uniqueId}`,
+        dateOfBirth: data.dateOfBirth,
+        phoneNumber: data.phoneNumber,
+        email: data.email,
+
+        address: data.address,
+        gender: data.gender,
+
+        accountType: data.accountType,
+      });
+
+      console.log(res);
+      if (res.status == 201) {
+        reset();
+        window.alert("Account Requested Success");
+        console.log(res.data);
+      } else {
+        reset();
+        window.alert("Account Requested Fail");
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error("Server responded with an error:", error.response.status);
+        if (error.response.status === 500) {
+          alert("Something went wrong on the server. Please try again later.");
+        }
+      } else if (error.request) {
+        console.error("No response received from the server:", error.request);
+        alert("Unable to connect to the server. Please check your internet connection.");
+      } else {
+        console.error("Error setting up the request:", error.message);
+        alert("An unexpected error occurred. Please try again.");
+      }
+    }
   };
 
   return (
@@ -69,7 +122,9 @@ function Cover() {
                 render={({ field }) => (
                   <Autocomplete
                     multiple
-                    options={options}
+                    options={
+                      Array.isArray(accounts) ? accounts.map((account) => account.ProductName) : []
+                    }
                     value={field.value}
                     onChange={(event, newValue) => {
                       // Prevent removal of "Current Account"
@@ -241,7 +296,7 @@ function Cover() {
               <Controller
                 name="dateOfBirth"
                 control={control}
-                defaultValue="0001-01-01"
+                defaultValue="2000-01-01"
                 rules={{ required: "Date of Birth is required" }}
                 render={({ field }) => (
                   <MDInput

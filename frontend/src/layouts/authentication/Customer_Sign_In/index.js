@@ -9,11 +9,6 @@ import Switch from "@mui/material/Switch";
 import Grid from "@mui/material/Grid";
 import MuiLink from "@mui/material/Link";
 
-// @mui icons
-import FacebookIcon from "@mui/icons-material/Facebook";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import GoogleIcon from "@mui/icons-material/Google";
-
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -26,7 +21,7 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 import { useDispatch } from "react-redux";
 import { loginStart, loginFailure, loginSuccess } from "./../../../Storage/admin";
 import axios from "axios";
-
+import SignIn from "../sign-in/";
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
@@ -120,13 +115,13 @@ function Basic() {
               <MDTypography variant="button" color="text">
                 <MDTypography
                   component={Link}
-                  to="/authentication/Customer_Sign_In"
+                  to="/authentication/sign-in"
                   variant="button"
                   color="error"
                   fontWeight="medium"
                   textGradient
                 >
-                  Login in as Customer
+                  Login in as Adminstrator
                 </MDTypography>
               </MDTypography>
             </MDBox>

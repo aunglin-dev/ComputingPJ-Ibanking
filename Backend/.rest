@@ -91,7 +91,7 @@ POST http://localhost:8800/api/user/requestUserAccount
 Content-Type:application/json
 
 {
-  "username": "john_doe",
+  "username": "johndfddoe",
   "fullName": "John Doe",
   "NRC": "123456789",
    "dateOfBirth": "1990-01-01",

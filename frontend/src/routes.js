@@ -5,6 +5,7 @@ import RTL from "layouts/rtl";
 import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
+import CustomerSignIn from "layouts/authentication/Customer_Sign_In";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui icons
@@ -58,6 +59,14 @@ const routes = [
     icon: <Icon fontSize="small">person</Icon>,
     route: "/profile",
     component: <Profile />,
+  },
+  {
+    type: "collapse",
+    name: "Sign In",
+    key: "sign-in",
+    icon: <Icon fontSize="small">login</Icon>,
+    route: "/authentication/Customer_Sign_In",
+    component: <CustomerSignIn />,
   },
   {
     type: "collapse",

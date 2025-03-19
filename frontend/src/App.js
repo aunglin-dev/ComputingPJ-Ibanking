@@ -30,10 +30,12 @@ import createCache from "@emotion/cache";
 import SignIn from "layouts/authentication/sign-in";
 
 // Material Dashboard 2 React routes
-import routes from "routes";
+import routesAdmin from "routes";
+import RoutesCus from "RoutesCus";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
+import { useSelector } from "react-redux";
 
 // Images
 import brandWhite from "assets/images/logo-ct.png";
@@ -52,6 +54,22 @@ export default function App() {
     darkMode,
   } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
+
+  const { currentCustomer } = useSelector((state) => state.customer);
+  const { currentAdmin } = useSelector((state) => state.admin);
+
+  const isCustomerActive = !!currentCustomer?.UserId;
+  const isAdminActive = !!currentAdmin?.AdminID;
+
+  let routes = RoutesCus;
+  if (isCustomerActive && !isAdminActive) {
+    routes = RoutesCus;
+  } else if (isAdminActive && !isCustomerActive) {
+    routes = routesAdmin;
+  }
+
+  console.log(routes);
+
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
 

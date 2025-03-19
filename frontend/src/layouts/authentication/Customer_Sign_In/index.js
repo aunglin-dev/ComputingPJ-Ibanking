@@ -19,7 +19,8 @@ import { useNavigate } from "react-router-dom";
 // Authentication layout components
 import BasicLayout from "layouts/authentication/components/BasicLayout";
 import { useDispatch } from "react-redux";
-import { loginStart, loginFailure, loginSuccess } from "./../../../Storage/admin";
+import { loginStart, loginFailure, loginSuccess } from "./../../../Storage/customer";
+import { Adminlogout } from "./../../../Storage/admin";
 import axios from "axios";
 import SignIn from "../sign-in/";
 // Images
@@ -51,6 +52,15 @@ function Basic() {
       let userid = res.data.data.userId;
       console.log(userid);
       navigate("/authentication/first-login", { state: { userid } });
+    } else if (res.status == 200 && !res.data.IsFirstTimeLogin) {
+      dispatch(loginStart());
+
+      window.alert("Welcome From SMEDB I-Banking System ");
+      navigate("/dashboard");
+      console.log(res.data);
+      dispatch(loginSuccess(res.data));
+
+      dispatch(Adminlogout());
     }
 
     // Handle the response (e.g., login success/failure)

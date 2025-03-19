@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import BasicLayout from "layouts/authentication/components/BasicLayout";
 import { useDispatch } from "react-redux";
 import { loginStart, loginFailure, loginSuccess } from "./../../../Storage/admin";
+import { Customerlogout } from "./../../../Storage/customer";
 import axios from "axios";
 
 // Images
@@ -53,6 +54,7 @@ function Basic() {
       console.log(res.data);
       dispatch(loginSuccess(res.data));
 
+      dispatch(Customerlogout());
       navigate("/dashboard");
     }
 

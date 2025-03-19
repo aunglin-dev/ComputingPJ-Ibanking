@@ -11,6 +11,7 @@ import {
 } from "redux-persist";
 
 import AdminReducer from "./admin";
+import CustomerReducer from "./customer";
 import storage from "redux-persist/lib/storage";
 
 const persistConfig = {
@@ -21,6 +22,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   admin: AdminReducer,
+  customer: CustomerReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

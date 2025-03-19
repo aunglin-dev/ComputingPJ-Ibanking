@@ -17,10 +17,19 @@ Post http://localhost:8800/api/auth/signin
 Content-Type:application/json
 
 {
-  "email":"TestNew4kmd@.edu.mm",
-  "password": "123456"
+  "email":"linoscar724@gmail.com",
+  "password": "Et|WkU)_^^J3"
 }
 
+
+####
+Post http://localhost:8800/api/auth/changepassword
+Content-Type:application/json
+
+{
+  "userId" : 17,
+  "password": "123456"
+}
 
 ###
 GET http://localhost:8800/api/admin/getAdmin

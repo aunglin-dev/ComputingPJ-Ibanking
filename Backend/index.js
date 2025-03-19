@@ -25,6 +25,7 @@ app.use(express.json());
 //Routers
 app.use("/api/admin", adminRouter);
 app.use("/api/user", userRouter);
+app.use("/api/auth", AuthRouter);
 app.use("/api/accountTypes", accountTypeRouter);
 
 app.use((err, req, res, next) => {

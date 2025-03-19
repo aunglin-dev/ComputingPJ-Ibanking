@@ -205,6 +205,7 @@ export const updateUser = async (req, res, next) => {
       where: { UserId },
     });
     console.log("Updated User", updatedUser);
+
     // Create a transporter for sending the email
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",

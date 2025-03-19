@@ -37,18 +37,20 @@ function Basic() {
     event.preventDefault();
     console.log("Email: ", email);
     console.log("Password: ", password);
-    dispatch(loginStart());
-    const res = await axios.post("/admin/adminSigin", {
-      Email: email,
-      Password: password,
+
+    const res = await axios.post("/auth/signin  ", {
+      email: email,
+      password: password,
     });
 
-    if (res.status == 200) {
-      window.alert("Welcome From SMEDB I-Banking System ");
-      console.log(res.data);
-      dispatch(loginSuccess(res.data));
-
-      navigate("/dashboard");
+    setEmail("");
+    setPassword("");
+    console.log(res);
+    if (res.status == 201 && res.data.isFirstLogin) {
+      //   dispatch(loginSuccess(res.data));
+      let userid = res.data.data.userId;
+      console.log(userid);
+      navigate("/authentication/first-login", { state: { userid } });
     }
 
     // Handle the response (e.g., login success/failure)

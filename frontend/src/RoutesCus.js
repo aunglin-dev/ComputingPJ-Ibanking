@@ -8,6 +8,7 @@ import SignIn from "layouts/authentication/sign-in";
 import CustomerSignIn from "layouts/authentication/Customer_Sign_In";
 import SignUp from "layouts/authentication/sign-up";
 import FirstLogin from "layouts/authentication/FirstLogin";
+import OwnTransfer from "layouts/Transfers/NormalTransfer/OwnTransfer";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -38,6 +39,7 @@ const routes = [
     route: "/notifications",
     component: <Notifications />,
   },
+
   {
     type: "collapse",
     name: "Profile",
@@ -48,6 +50,30 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Transfer",
+    key: "Transfer",
+    icon: <Icon fontSize="small">Transfer</Icon>,
+    route: "/transfer/owntransfer",
+    component: <OwnTransfer />,
+  },
+  {
+    type: "collapse",
+    name: "Remittance Transfer",
+    key: "Transfer",
+    icon: <Icon fontSize="small">Transfer</Icon>,
+    route: "/transfer/owntransfer",
+    component: <OwnTransfer />,
+  },
+  {
+    type: "collapse",
+    name: "Schedule Transfer",
+    key: "Transfer",
+    icon: <Icon fontSize="small">Transfer</Icon>,
+    route: "/transfer/owntransfer",
+    component: <OwnTransfer />,
+  },
+  {
+    type: "collapse",
     name: "Sign In",
     key: "sign-in",
     icon: <Icon fontSize="small">login</Icon>,
@@ -55,7 +81,7 @@ const routes = [
     component: <CustomerSignIn />,
   },
   {
-    type: "collapse",
+    type: "title",
     name: "Sign In (Admin)",
     key: "sign-in(Admin)",
     icon: <Icon fontSize="small">login</Icon>,
@@ -64,7 +90,7 @@ const routes = [
   },
 
   {
-    type: "collapse",
+    type: "divider",
     name: "Sign Up",
     key: "sign-up",
     icon: <Icon fontSize="small">assignment</Icon>,

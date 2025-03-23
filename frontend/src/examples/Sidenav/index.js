@@ -11,7 +11,7 @@ import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Icon from "@mui/material/Icon";
-
+import toggleLogo from "../../assets/images/toggle-logo.png";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -146,13 +146,19 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           </MDTypography>
         </MDBox>
         <MDBox component={NavLink} to="/" display="flex" alignItems="center">
-          {brand && <MDBox component="img" src={brand} alt="Brand" width="2rem" />}
+          {brand && <img src={toggleLogo} width="35rem" />}
           <MDBox
             width={!brandName && "100%"}
             sx={(theme) => sidenavLogoLabel(theme, { miniSidenav })}
           >
-            <MDTypography component="h5" variant="button" fontWeight="medium" color={textColor}>
-              SMED Bank Admin Panel
+            <MDTypography
+              component="h5"
+              ml={2}
+              variant="button"
+              fontWeight="medium"
+              color={textColor}
+            >
+              SMEDB Pay
             </MDTypography>
           </MDBox>
         </MDBox>

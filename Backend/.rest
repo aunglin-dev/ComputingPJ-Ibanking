@@ -68,6 +68,73 @@ Content-Type:application/json
 }
 
 
+#######
+
+POST  http://localhost:8800/api/transfer/validateAllTransfer
+Content-Type:application/json
+
+{
+
+"fromAccountNo" : "100005247913660",
+ "toAccountNo" : "100005872770075",
+  "amount" : 100.0,
+   "descrption" : "blah blah "
+
+
+
+
+}
+
+#######
+
+POST  http://localhost:8800/api/transfer/validateAllTransfer
+Content-Type:application/json
+
+{
+   "userId" : 9 ,
+"fromAccountNo" : "100005247913660",
+ "toAccountNo" : "100005872770075",
+  "amount" : 100.0,
+   "descrption" : "blah blah "
+
+
+
+
+}
+
+
+#######
+
+POST  http://localhost:8800/api/transfer/confirmTransfer
+Content-Type:application/json
+
+{
+   "userId" : 9 ,
+    "fromAccountNo": "100005247913660",
+    "toAccountNo" : "100001140112293",
+    "amount" :"1000.00",
+    "descrption": "blah blah",
+    "transactionDate":"03/25/2025",
+    "tranType": "TransferOwnerAccount"
+
+}
+
+
+
+#######
+
+POST  http://localhost:8800/api/customerAccount/fetchfromAccNo
+Content-Type:application/json
+
+{
+
+"UserId" : 9
+
+
+
+
+}
+
 ###
 GET http://localhost:8800/api/user/getUsers
 Content-Type:application/json

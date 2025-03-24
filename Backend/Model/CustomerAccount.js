@@ -45,6 +45,10 @@ export default (sequelize) => {
         type: DataTypes.BOOLEAN,
         allowNull: true,
       },
+      Balance: {
+        type: DataTypes.DECIMAL(18, 2),
+        allowNull: true,
+      },
     },
     {
       timestamps: false, // Disable Sequelize's default timestamps (createdAt, updatedAt)

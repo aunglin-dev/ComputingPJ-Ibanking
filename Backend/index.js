@@ -6,6 +6,8 @@ import bodyParser from "body-parser";
 import adminRouter from "./Routes/admin.js";
 import userRouter from "./Routes/users.js";
 import accountTypeRouter from "./Routes/accountTypes.js";
+import transferRouter from "./Routes/transfer.js";
+import customerAccountRouter from "./Routes/customerAccount.js";
 
 const app = express();
 const port = 8800;
@@ -27,6 +29,8 @@ app.use("/api/admin", adminRouter);
 app.use("/api/user", userRouter);
 app.use("/api/auth", AuthRouter);
 app.use("/api/accountTypes", accountTypeRouter);
+app.use("/api/transfer", transferRouter);
+app.use("/api/customerAccount", customerAccountRouter);
 
 app.use((err, req, res, next) => {
   const status = err.status || 500;

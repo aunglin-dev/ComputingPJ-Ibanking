@@ -3,6 +3,7 @@ import Admin from "./Model/admin.js";
 import User from "./Model/User.js";
 import CustomerAccount from "./Model/CustomerAccount.js";
 import AccountTypes from "./Model/AccountTypes.js";
+import TransferLog from "./Model/TransferLog.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -15,9 +16,9 @@ const sequelize = new Sequelize(
     host: "localhost",
     dialect: "mssql",
     dialectOptions: {
-      trustedConnection: true, // Windows Authentication, if needed
+      trustedConnection: true,
       enableArithAbort: true,
-      trustServerCertificate: true, // For self-signed certificates
+      trustServerCertificate: true,
     },
     logging: false, // Optional: Disable logging of SQL queries
   }
@@ -28,6 +29,7 @@ db.Admin = Admin(sequelize);
 db.User = User(sequelize);
 db.CustomerAccount = CustomerAccount(sequelize);
 db.AccountTypes = AccountTypes(sequelize);
+db.TransferLog = TransferLog(sequelize);
 
 const initDB = async () => {
   try {

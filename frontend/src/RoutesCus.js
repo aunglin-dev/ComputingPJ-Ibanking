@@ -9,9 +9,12 @@ import CustomerSignIn from "layouts/authentication/Customer_Sign_In";
 import SignUp from "layouts/authentication/sign-up";
 import FirstLogin from "layouts/authentication/FirstLogin";
 import OwnTransfer from "layouts/Transfers/NormalTransfer/OwnTransfer";
+import ValidateTransfer from "layouts/Transfers/NormalTransfer/ValidateTransfer";
+import ConfirmTransfer from "layouts/Transfers/NormalTransfer/ConfirmTransfer";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+import { IMPORT } from "stylis";
 
 const routes = [
   {
@@ -57,20 +60,20 @@ const routes = [
     component: <OwnTransfer />,
   },
   {
-    type: "collapse",
-    name: "Remittance Transfer",
-    key: "Transfer",
+    type: "divider",
+    name: "TransferValidate",
+    key: "TransferValidate",
     icon: <Icon fontSize="small">Transfer</Icon>,
-    route: "/transfer/owntransfer",
-    component: <OwnTransfer />,
+    route: "/transfer/validateTransfer",
+    component: <ValidateTransfer />,
   },
   {
-    type: "collapse",
-    name: "Schedule Transfer",
-    key: "Transfer",
+    type: "title",
+    name: "TransferConfirm",
+    key: "TransferConfirm",
     icon: <Icon fontSize="small">Transfer</Icon>,
-    route: "/transfer/owntransfer",
-    component: <OwnTransfer />,
+    route: "/transfer/confirmTransfer",
+    component: <ConfirmTransfer />,
   },
   {
     type: "collapse",

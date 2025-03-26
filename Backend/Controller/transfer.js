@@ -4,7 +4,8 @@ import { db, sequelize } from "../config.js";
 export const validateTransfer = async (req, res) => {
   const transaction = await sequelize.transaction();
   try {
-    const { userId, fromAccountNo, toAccountNo, amount, descrption } = req.body;
+    const { userId, fromAccountNo, toAccountNo, amount, description } =
+      req.body;
 
     // Validate input
     if (!fromAccountNo || !toAccountNo || !amount) {
@@ -29,10 +30,21 @@ export const validateTransfer = async (req, res) => {
     if (!fromAccount || !toAccount) {
       await transaction.rollback();
       return res
-        .status(404)
+        .status(400)
         .json({ message: "One or both accounts not found" });
     }
 
+    //  Fetch Sender and Receiver
+    const [sender, receiver] = await Promise.all([
+      db.User.findOne({
+        where: { UserId: fromAccount.UserId },
+        transaction,
+      }),
+      db.User.findOne({
+        where: { UserId: toAccount.UserId },
+        transaction,
+      }),
+    ]);
     // Check balance
     if (Number(fromAccount.Balance) < Number(amount)) {
       await transaction.rollback();
@@ -43,7 +55,9 @@ export const validateTransfer = async (req, res) => {
       fromAccountNo,
       toAccountNo,
       amount,
-      descrption,
+      description,
+      senderName: sender.FullName,
+      receiverName: receiver.FullName,
       transactionDate: new Date().toLocaleString("en-US", {
         year: "numeric",
         month: "2-digit",
@@ -103,9 +117,21 @@ export const confirmTransfer = async (req, res) => {
     if (!fromAccount || !toAccount) {
       await transaction.rollback();
       return res
-        .status(404)
+        .status(400)
         .json({ message: "One or both accounts not found" });
     }
+
+    //  Fetch Sender and Receiver
+    const [sender, receiver] = await Promise.all([
+      db.User.findOne({
+        where: { UserId: fromAccount.UserId },
+        transaction,
+      }),
+      db.User.findOne({
+        where: { UserId: toAccount.UserId },
+        transaction,
+      }),
+    ]);
 
     // Check balance
     if (Number(fromAccount.Balance) < Number(amount)) {
@@ -140,10 +166,11 @@ export const confirmTransfer = async (req, res) => {
         ToAccount: toAccountNo,
         TransactionAmount: amount,
         Description: description,
+        ToAccountName: receiver.FullName,
         Currency: "MMK",
         Status: "Success",
         TranType: tranType,
-        TransactionDate: new Date(), // Use server timestamp
+        TransactionDate: new Date(),
       },
       { transaction }
     );
@@ -151,10 +178,25 @@ export const confirmTransfer = async (req, res) => {
     //  Commit transaction
     await transaction.commit();
 
+    const respondedTransaction = {
+      UserId: newTransaction.UserId,
+      FromAccount: newTransaction.FromAccount,
+      TransactionId: newTransaction.TransactionId,
+      ToAccount: newTransaction.ToAccount,
+      TransactionAmount: newTransaction.TransactionAmount,
+      Description: newTransaction.Description,
+      ToAccountName: newTransaction.ToAccountName,
+      Currency: newTransaction.Currency,
+      senderName: sender.FullName,
+      TranType: newTransaction.TranType,
+      TransactionDate: newTransaction.newTransaction,
+    };
+
     return res.status(200).json({
       success: true,
       message: "Transaction completed successfully",
-      transaction: newTransaction,
+      transaction: respondedTransaction,
+
       newBalance: fromAccount.Balance - amount, // Return updated balance
     });
   } catch (error) {

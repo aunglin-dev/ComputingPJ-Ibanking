@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -14,10 +14,14 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { Controller } from "react-hook-form";
 import MDInput from "components/MDInput";
+import { useSelector } from "react-redux";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import axios from "axios";
+import { string } from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 function OwnTransfer() {
   const [successSB, setSuccessSB] = useState(false);
@@ -26,6 +30,76 @@ function OwnTransfer() {
   const [errorSB, setErrorSB] = useState(false);
   const [rawValue, setRawValue] = useState(""); //
   const [displayValue, setDisplayValue] = useState("");
+  const [fromAccountNoList, setFromAccountNoList] = useState([]);
+  const [toAccountNoList, setToAccountNoList] = useState([]);
+  const { currentCustomer } = useSelector((state) => state.customer);
+  const [selectedValueForFromAcc, setSelectedValueForFromAcc] = useState(null);
+  const [selectedValueForToAcc, setSelectedValueForToAcc] = useState("");
+  const [description, setDescription] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const fetchAccountNo = async () => {
+    console.log(currentCustomer?.UserId);
+    console.log("OwnTransfer", currentCustomer);
+    const res = await axios.post("/customerAccount/fetchfromAccNo", {
+      UserId: currentCustomer?.UserId,
+    });
+    console.log("from account", res.data);
+
+    const resFromAccountLsit = res.data.map((el) => el?.AccountNo);
+    setFromAccountNoList(res.data);
+    console.log("FromAccountNolist", fromAccountNoList);
+    setToAccountNoList(resFromAccountLsit.filter((el) => el != selectedValueForFromAcc));
+  };
+
+  const navigate = useNavigate();
+
+  const validateTransfer = async () => {
+    try {
+      const validateModel = {
+        userId: currentCustomer?.UserId,
+        fromAccountNo: selectedValueForFromAcc,
+        toAccountNo: selectedValueForToAcc,
+        amount: rawValue,
+        description: description,
+      };
+      console.log(validateModel);
+      const res = await axios.post("/transfer/validateAllTransfer", validateModel);
+
+      console.log(res);
+      if (res.status == 200) {
+        setSuccessSB(true);
+        const navigatedModel = res.data;
+        console.log("NavigatedModel_____________", navigatedModel);
+        navigate("/transfer/validateTransfer", {
+          state: { navigatedModel },
+        });
+      } else {
+        window.alert("something is wrong");
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error("Server responded with an error:", error.response.status);
+        if (error.response.status === 500) {
+          alert("Something went wrong on the server. Please try again later.");
+        }
+        if (error.response.status === 400) {
+          setErrorSB(true);
+          setErrorMessage(error.response.data.message);
+        }
+      } else if (error.request) {
+        console.error("No response received from the server:", error.request);
+        alert("Unable to connect to the server. Please check your internet connection.");
+      } else {
+        console.error("Error setting up the request:", error.message);
+        alert("An unexpected error occurred. Please try again.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchAccountNo();
+  }, [selectedValueForFromAcc]);
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -35,7 +109,6 @@ function OwnTransfer() {
   const closeWarningSB = () => setWarningSB(false);
   const openErrorSB = () => setErrorSB(true);
   const closeErrorSB = () => setErrorSB(false);
-  const [selectedValue, setSelectedValue] = useState("");
 
   // Function to format the value with thousand separators
   const formatWithSeparator = (value) => {
@@ -73,9 +146,9 @@ function OwnTransfer() {
     <MDSnackbar
       color="success"
       icon="check"
-      title="Material Dashboard"
-      content="Hello, world! This is a notification message"
-      dateTime="11 mins ago"
+      title="Validate Own Transfer"
+      content="Transaction Validated Successfully"
+      dateTime="Just Now"
       open={successSB}
       onClose={closeSuccessSB}
       close={closeSuccessSB}
@@ -113,17 +186,15 @@ function OwnTransfer() {
     <MDSnackbar
       color="error"
       icon="warning"
-      title="Material Dashboard"
-      content="Hello, world! This is a notification message"
-      dateTime="11 mins ago"
+      title="Validate Own Transfer"
+      content={errorMessage}
+      dateTime="Just Now"
       open={errorSB}
       onClose={closeErrorSB}
       close={closeErrorSB}
       bgWhite
     />
   );
-
-  const options = ["Current Account", "Savings Account", "Fixed Deposit"];
 
   return (
     <DashboardLayout>
@@ -173,23 +244,42 @@ function OwnTransfer() {
                 </MDTypography>
               </MDBox>
               <MDBox p={2}>
-                <Grid container spacing={6}>
+                <Grid container spacing={4}>
                   <Grid item xs={12} sm={6} lg={6}>
                     {/* <MDButton variant="gradient" color="success" onClick={openSuccessSB} fullWidth>
                       success notification
                     </MDButton> */}
                     <Autocomplete
-                      value={selectedValue}
+                      value={selectedValueForFromAcc}
                       onChange={(event, newValue) => {
-                        setSelectedValue(newValue); // Update the selected value
+                        setSelectedValueForFromAcc(newValue); // Update the selected value
                         console.log(newValue);
                       }}
-                      options={options}
+                      options={fromAccountNoList.map((el) => el.AccountNo)}
                       getOptionLabel={(option) => option || ""} // Handle null/undefined
                       renderInput={(params) => (
                         <TextField {...params} label="Select From Account" variant="outlined" />
                       )}
                     />
+                    {selectedValueForFromAcc != null && (
+                      <MDTypography
+                        variant="caption"
+                        fontWeight="medium"
+                        textTransform="capitalize"
+                        sx={{
+                          color: "#e7ad00",
+                          opacity: 0.9,
+
+                          fontStyle: "italic",
+                          textShadow: "0px 1px 1px rgba(0,0,0,0.2)",
+                        }}
+                      >
+                        {fromAccountNoList
+                          .filter((el) => el.AccountNo == selectedValueForFromAcc)
+                          .map((el) => el?.Balance)}{" "}
+                        MMK
+                      </MDTypography>
+                    )}
                     {renderSuccessSB}
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6}>
@@ -198,17 +288,19 @@ function OwnTransfer() {
                     </MDButton> */}
 
                     <Autocomplete
-                      value={selectedValue}
+                      value={selectedValueForToAcc}
                       onChange={(event, newValue) => {
-                        setSelectedValue(newValue); // Update the selected value
+                        setSelectedValueForToAcc(newValue);
+
                         console.log(newValue);
                       }}
-                      options={options}
+                      options={toAccountNoList}
                       getOptionLabel={(option) => option || ""} // Handle null/undefined
                       renderInput={(params) => (
                         <TextField {...params} label="Select To Account" variant="outlined" />
                       )}
                     />
+
                     {renderInfoSB}
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6}>
@@ -232,7 +324,13 @@ function OwnTransfer() {
                       error notification
                     </MDButton> */}
                     <MDBox mb={2}>
-                      <MDInput type="text" label="Description" fullWidth />
+                      <MDInput
+                        type="text"
+                        label="Description"
+                        fullWidth
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                      />
                     </MDBox>
                     <Grid item xs={12} sm={6} lg={6}>
                       {renderWarningSB}
@@ -242,7 +340,7 @@ function OwnTransfer() {
                 </Grid>
               </MDBox>
               <MDBox mt={1} mb={1} mr={2} display="flex" justifyContent="flex-end">
-                <MDButton type="submit" variant="gradient" color="error">
+                <MDButton type="submit" variant="gradient" color="error" onClick={validateTransfer}>
                   Next
                 </MDButton>
               </MDBox>

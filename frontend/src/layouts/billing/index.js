@@ -19,8 +19,9 @@ import Transactions from "layouts/billing/components/Transactions";
 import { useSelector } from "react-redux";
 
 function Billing() {
-  const { currentcustomer } = useSelector((state) => state.customer);
-  console.log("Current Customer", currentcustomer);
+  const { currentCustomer } = useSelector((state) => state.admin);
+
+  console.log("Current Customer", currentCustomer);
   return (
     <DashboardLayout>
       <DashboardNavbar absolute isMini />
@@ -32,7 +33,7 @@ function Billing() {
                 <Grid item xs={12} xl={6}>
                   <MasterCard
                     number={100004736383698}
-                    holder={currentcustomer?.FullName}
+                    holder={currentCustomer?.FullName}
                     expires="11/22"
                   />
                 </Grid>

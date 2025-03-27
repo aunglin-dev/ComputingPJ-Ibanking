@@ -11,6 +11,9 @@ import FirstLogin from "layouts/authentication/FirstLogin";
 import OwnTransfer from "layouts/Transfers/NormalTransfer/OwnTransfer";
 import ValidateTransfer from "layouts/Transfers/NormalTransfer/ValidateTransfer";
 import ConfirmTransfer from "layouts/Transfers/NormalTransfer/ConfirmTransfer";
+import OtherTransfer from "layouts/Transfers/NormalTransfer/OtherTransfer";
+import ValidateOtherTransfer from "layouts/Transfers/NormalTransfer/ValidateOtherTransfer";
+import ConfirmTransferOther from "layouts/Transfers/NormalTransfer/ConfirmTransferOther";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -53,11 +56,19 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Transfer",
+    name: "Own Transfer",
     key: "Transfer",
     icon: <Icon fontSize="small">Transfer</Icon>,
     route: "/transfer/owntransfer",
     component: <OwnTransfer />,
+  },
+  {
+    type: "collapse",
+    name: "Other Transfer",
+    key: "TransferOther",
+    icon: <Icon fontSize="small">Transfer</Icon>,
+    route: "/transfer/othertransfer",
+    component: <OtherTransfer />,
   },
   {
     type: "divider",
@@ -69,11 +80,28 @@ const routes = [
   },
   {
     type: "title",
+    name: "TransferOtherValidate",
+    key: "TransferOtherValidate",
+    icon: <Icon fontSize="small">Transfer</Icon>,
+    route: "/transfer/validateotherTransfer",
+    component: <ValidateOtherTransfer />,
+  },
+
+  {
+    type: "title",
     name: "TransferConfirm",
     key: "TransferConfirm",
     icon: <Icon fontSize="small">Transfer</Icon>,
     route: "/transfer/confirmTransfer",
     component: <ConfirmTransfer />,
+  },
+  {
+    type: "title",
+    name: "TransferOtherConfirm",
+    key: "TransferOtherConfirm",
+    icon: <Icon fontSize="small">Transfer</Icon>,
+    route: "/transfer/confirmTransferother",
+    component: <ConfirmTransferOther />,
   },
   {
     type: "collapse",

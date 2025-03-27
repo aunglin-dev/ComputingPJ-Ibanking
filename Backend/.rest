@@ -119,6 +119,15 @@ Content-Type:application/json
 
 }
 
+#######
+
+POST  http://localhost:8800/api/transfer/fetchToAccNo
+Content-Type:application/json
+
+{
+"toAccountNo" : "100003459310864"
+
+}
 
 
 #######

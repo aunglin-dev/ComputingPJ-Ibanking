@@ -4,6 +4,8 @@ import User from "./Model/User.js";
 import CustomerAccount from "./Model/CustomerAccount.js";
 import AccountTypes from "./Model/AccountTypes.js";
 import TransferLog from "./Model/TransferLog.js";
+import OtherBank from "./Model/OtherBank.js";
+import OtherBranches from "./Model/OtherBranches.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -30,6 +32,8 @@ db.User = User(sequelize);
 db.CustomerAccount = CustomerAccount(sequelize);
 db.AccountTypes = AccountTypes(sequelize);
 db.TransferLog = TransferLog(sequelize);
+db.OtherBranches = OtherBranches(sequelize);
+db.OtherBank = OtherBank(sequelize);
 
 const initDB = async () => {
   try {

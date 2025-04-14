@@ -118,6 +118,19 @@ Content-Type:application/json
     "tranType": "TransferOwnerAccount"
 
 }
+#####
+
+Get http://localhost:8800/api/otherbank/fetchAllOtherBank
+
+#######
+
+POST  http://localhost:8800/api/otherbank/fetchOtherBranchesByOtherBankId
+Content-Type:application/json
+
+{
+"BankId" : 1232
+
+}
 
 #######
 
@@ -128,8 +141,6 @@ Content-Type:application/json
 "toAccountNo" : "100003459310864"
 
 }
-
-
 #######
 
 POST  http://localhost:8800/api/customerAccount/fetchfromAccNo

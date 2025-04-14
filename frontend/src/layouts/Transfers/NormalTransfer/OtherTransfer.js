@@ -259,7 +259,7 @@ function OtherTransfer() {
               <MDBox p={2} lineHeight={0}>
                 <MDTypography variant="h5">Other Transfer</MDTypography>
                 <MDTypography variant="button" color="text" fontWeight="regular">
-                  Transfering Funds between other account holders
+                  Transfering Funds to other account holders
                 </MDTypography>
               </MDBox>
               <MDBox p={2}>

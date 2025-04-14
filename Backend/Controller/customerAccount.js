@@ -6,6 +6,7 @@ export const fetchfromAccNo = async (req, res) => {
   const resfromAccNoList = await db.CustomerAccount.findAll({
     where: { UserId: UserId },
   });
+  
 
   console.log(resfromAccNoList);
   if (resfromAccNoList == null)

@@ -14,6 +14,7 @@ import ConfirmTransfer from "layouts/Transfers/NormalTransfer/ConfirmTransfer";
 import OtherTransfer from "layouts/Transfers/NormalTransfer/OtherTransfer";
 import ValidateOtherTransfer from "layouts/Transfers/NormalTransfer/ValidateOtherTransfer";
 import ConfirmTransferOther from "layouts/Transfers/NormalTransfer/ConfirmTransferOther";
+import OtherBankTransfer from "layouts/Transfers/NormalTransfer/OtherBankTransfer";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -69,6 +70,14 @@ const routes = [
     icon: <Icon fontSize="small">Transfer</Icon>,
     route: "/transfer/othertransfer",
     component: <OtherTransfer />,
+  },
+  {
+    type: "collapse",
+    name: "Other Bank Transfer",
+    key: "TransferOtherBank",
+    icon: <Icon fontSize="small">Transfer</Icon>,
+    route: "/transfer/otherbanktransfer",
+    component: <OtherBankTransfer />,
   },
   {
     type: "divider",

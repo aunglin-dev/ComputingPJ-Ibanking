@@ -118,6 +118,46 @@ Content-Type:application/json
     "tranType": "TransferOwnerAccount"
 
 }
+
+#####
+
+POST  http://localhost:8800/api/otherbank/confirmOtherBankTransfer
+Content-Type:application/json
+
+{
+   "userId" : 9 ,
+    "fromAccountNo": "100005247913660",
+    "toAccountNo" : "10000114293",
+      "OtherBankId": 23,
+      "OtherBranchId" :238,
+    "amount" :"1000.00",
+    "descrption": "blah blah",
+    "transactionDate":"03/25/2025",
+    "receiverName" : "something",
+    "tranType": "TransferOtherBank",
+    "phone": "0931530189",
+    "email": "exp@gmail.com"
+
+}
+
+#######
+
+POST  http://localhost:8800/api/otherbank/validateOtherBankTransfer
+Content-Type:application/json
+
+{
+   "userId" : 9 ,
+    "fromAccountNo": "100005247913660",
+    "toAccountNo" : "10000114293",
+      "OtherBankId": 23,
+      "OtherBranchId" :238,
+    "amount" :"1000.00",
+    "descrption": "blah blah",
+    "transactionDate":"03/25/2025",
+    "receiverName" : "something",
+    "tranType": "TransferOtherBank"
+
+}
 #####
 
 Get http://localhost:8800/api/otherbank/fetchAllOtherBank

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import { Chip } from "@mui/material";
+import { Chip, Typography } from "@mui/material";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -16,6 +16,8 @@ import { Controller } from "react-hook-form";
 import MDInput from "components/MDInput";
 import { useSelector } from "react-redux";
 import { tranType } from "../../../helper/TransferType.js";
+import { List, ListItem, ListItemText, ListItemIcon } from "@mui/material";
+import { FiberManualRecord } from "@mui/icons-material";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -457,33 +459,7 @@ function OtherBankTransfer() {
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6}>
                     <MDBox mb={2}>
-                      <MDInput
-                        type="text"
-                        placeholder="Receiver Name"
-                        fullWidth
-                        readOnly
-                        value={toaccountInfoForDisplay.receiverName ?? "Receiver Name"}
-                      />
-                      {Object.keys(toaccountInfoForDisplay).length > 0 && (
-                        <MDTypography
-                          variant="caption"
-                          fontWeight="medium"
-                          textTransform="capitalize"
-                          sx={{
-                            color: "#e7ad00",
-                            opacity: 0.9,
-
-                            fontStyle: "italic",
-                            textShadow: "0px 1px 1px rgba(0,0,0,0.2)",
-                          }}
-                        >
-                          {/* {toaccountInfoForDisplay
-                            .filter((el) => el.AccountNo == selectedValueForFromAcc)
-                            .map((el) => el?.Balance)}{" "}
-                          MMK */}
-                          Account Type : {toaccountInfoForDisplay?.accountType}
-                        </MDTypography>
-                      )}
+                      <MDInput type="text" label="Account Holder Name" fullWidth />
                     </MDBox>
 
                     {renderInfoSB}
@@ -502,9 +478,59 @@ function OtherBankTransfer() {
                     {renderWarningSB}
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6}>
-                    {/* <MDButton variant="gradient" color="error" onClick={openErrorSB} fullWidth>
-                      error notification
-                    </MDButton> */}
+                    <MDBox sx={{ display: "flex", gap: 2 }}>
+                      {" "}
+                      <MDBox sx={{ flex: 0.3 }}>
+                        {" "}
+                        <MDInput type="text" label="+95" fullWidth value={displayValue} disabled />
+                      </MDBox>
+                      <MDBox sx={{ flex: 2 }}>
+                        {" "}
+                        <MDInput
+                          type="text"
+                          label="Account Holder Account Number"
+                          fullWidth
+                          value={displayValue}
+                          onChange={handleChange}
+                        />
+                      </MDBox>
+                    </MDBox>
+                    {renderWarningSB}
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} lg={6}>
+                    <MDBox mb={2}>
+                      <MDInput
+                        type="text"
+                        label="Account Holder Email"
+                        fullWidth
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                      />
+                    </MDBox>
+                    <Grid item xs={12} sm={6} lg={6}>
+                      {renderWarningSB}
+                    </Grid>
+                    {renderErrorSB}
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} lg={6}>
+                    <MDBox mb={2}>
+                      <MDInput
+                        type="text"
+                        label="Address"
+                        fullWidth
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                      />
+                    </MDBox>
+                    <Grid item xs={12} sm={6} lg={6}>
+                      {renderWarningSB}
+                    </Grid>
+                    {renderErrorSB}
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} lg={6}>
                     <MDBox mb={2}>
                       <MDInput
                         type="text"
@@ -521,6 +547,59 @@ function OtherBankTransfer() {
                   </Grid>
                 </Grid>
               </MDBox>
+
+              <MDTypography p={2} variant="button" fontWeight="regular">
+                Terms And Conditions
+              </MDTypography>
+              <List sx={{ pl: 4 }}>
+                <ListItem>
+                  <ListItemText
+                    primary={
+                      <MDTypography variant="button" fontWeight="regular">
+                        Please carefully double-check the Beneficiary Account Number
+                      </MDTypography>
+                    }
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary={
+                      <MDTypography variant="button" fontWeight="regular">
+                        Beneficiary Name, and Mobile Number before transferring money
+                      </MDTypography>
+                    }
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary={
+                      <MDTypography variant="button" fontWeight="regular">
+                        If the account number or name is incorrect, you will be responsible for the
+                        transaction.
+                      </MDTypography>
+                    }
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary={
+                      <MDTypography variant="button" fontWeight="regular">
+                        Additionally, when transferring to another bank account
+                      </MDTypography>
+                    }
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary={
+                      <MDTypography variant="button" fontWeight="regular">
+                        please verify the other banks information first
+                      </MDTypography>
+                    }
+                  />
+                </ListItem>
+              </List>
+
               <MDBox mt={1} mb={1} mr={2} display="flex" justifyContent="flex-end">
                 <MDButton type="submit" variant="gradient" color="error" onClick={validateTransfer}>
                   Next

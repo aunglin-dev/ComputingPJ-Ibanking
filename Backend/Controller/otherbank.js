@@ -1,6 +1,6 @@
 import { where } from "sequelize";
 import { db, sequelize } from "../config.js";
-import { tranType } from "../Service/TranType.js";
+import { tranType } from "../Utils/TranType.js";
 
 export const fetchAllOtherBank = async (req, res) => {
   try {

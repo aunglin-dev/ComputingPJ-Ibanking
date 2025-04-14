@@ -9,6 +9,7 @@ import accountTypeRouter from "./Routes/accountTypes.js";
 import transferRouter from "./Routes/transfer.js";
 import customerAccountRouter from "./Routes/customerAccount.js";
 import otherbank from "./Routes/otherbank.js";
+import cronjob from "./Service/cronjob.js";
 
 const app = express();
 const port = 8800;

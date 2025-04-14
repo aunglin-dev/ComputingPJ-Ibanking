@@ -151,8 +151,9 @@ Content-Type:application/json
     "toAccountNo" : "10000114293",
       "OtherBankId": 23,
       "OtherBranchId" :238,
+      "email" : "aunglin2252003gmail.com",
     "amount" :"1000.00",
-    "descrption": "blah blah",
+        "descrption": "blah blah",
     "transactionDate":"03/25/2025",
     "receiverName" : "something",
     "tranType": "TransferOtherBank"

@@ -44,8 +44,13 @@ function OtherBankTransfer() {
   const [selectedotherBranches, setselectedotherBranches] = useState(null);
   const [selectedotherBankId, setselectedotherBankId] = useState(null);
 
+  const [selectedotherBranchId, setSelectedOtherBranchId] = useState(null);
+
   const [selectedValueForToAcc, setSelectedValueForToAcc] = useState("");
   const [description, setDescription] = useState(null);
+  const [phone, setPhone] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [accountHolderName, setAccountHolderName] = useState(null);
   const [toaccountInfo, setToAccountInfo] = useState({});
   const [toaccountInfoForDisplay, setToAccountInfoForDisplay] = useState({});
   const [isFetchtoaccountInfo, setisFetchtoaccountInfo] = useState(true);
@@ -122,48 +127,13 @@ function OtherBankTransfer() {
   };
 
   const fetchToAccountInfo = async (e) => {
-    try {
-      const inputValue = e.target.value;
-      setisFetchtoaccountInfo(true);
-      setToAccountInfoForDisplay({});
-      // Remove all non-digit characters
-      const numericValue = inputValue.replace(/\D/g, "");
+    const inputValue = e.target.value;
+    setisFetchtoaccountInfo(true);
+    setToAccountInfoForDisplay({});
+    // Remove all non-digit characters
+    const numericValue = inputValue.replace(/\D/g, "");
 
-      setSelectedValueForToAcc(numericValue);
-
-      console.log("selectedValueForToAcc___________________________________", numericValue);
-
-      if (numericValue.length !== 15) {
-        return;
-      }
-      const res = await axios.post("/transfer/fetchToAccNo", {
-        toAccountNo: numericValue,
-      });
-
-      if (res.status == 200) {
-        console.log(res.data);
-        setToAccountInfo(res.data);
-        console.log(toaccountInfo);
-        setisFetchtoaccountInfo(false);
-      }
-    } catch (error) {
-      if (error.response) {
-        console.error("Server responded with an error:", error.response.status);
-        if (error.response.status === 500) {
-          alert("Something went wrong on the server. Please try again later.");
-        }
-        if (error.response.status === 400) {
-          setErrorSB(true);
-          setErrorMessage(error.response.data.message);
-        }
-      } else if (error.request) {
-        console.error("No response received from the server:", error.request);
-        alert("Unable to connect to the server. Please check your internet connection.");
-      } else {
-        console.error("Error setting up the request:", error.message);
-        alert("An unexpected error occurred. Please try again.");
-      }
-    }
+    setSelectedValueForToAcc(numericValue);
   };
 
   const navigate = useNavigate();
@@ -175,19 +145,23 @@ function OtherBankTransfer() {
         fromAccountNo: selectedValueForFromAcc,
         toAccountNo: selectedValueForToAcc,
         amount: rawValue,
-        receiverName: toaccountInfoForDisplay?.receiverName,
-        reqtranType: tranType?.TransferOther,
+        receiverName: accountHolderName,
+        reqtranType: tranType?.TransferOtherBank,
         description: description,
+        OtherBankId: selectedotherBankId,
+        OtherBranchId: selectedotherBranchId,
+        phone: phone,
+        email: email,
       };
       console.log(validateModel);
-      const res = await axios.post("/transfer/validateAllTransfer", validateModel);
+      const res = await axios.post("/otherbank/validateOtherBankTransfer", validateModel);
 
       console.log(res);
       if (res.status == 200) {
         setSuccessSB(true);
         const navigatedModel = res.data;
         console.log("NavigatedModel_____________", navigatedModel);
-        navigate("/transfer/validateotherTransfer", {
+        navigate("/transfer/validateotherBankTransfer", {
           state: { navigatedModel },
         });
       } else {
@@ -311,7 +285,7 @@ function OtherBankTransfer() {
     <MDSnackbar
       color="error"
       icon="warning"
-      title="Validate Own Transfer"
+      title="Validate Other Bank Transfer"
       content={errorMessage}
       dateTime="Just Now"
       open={errorSB}
@@ -337,9 +311,6 @@ function OtherBankTransfer() {
               <MDBox p={2}>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6} lg={6}>
-                    {/* <MDButton variant="gradient" color="success" onClick={openSuccessSB} fullWidth>
-                      success notification
-                    </MDButton> */}
                     <Autocomplete
                       value={selectedValueForFromAcc}
                       onChange={(event, newValue) => {
@@ -407,8 +378,8 @@ function OtherBankTransfer() {
                       value={selectedotherBranches}
                       onChange={(event, newValue) => {
                         setselectedotherBranches(newValue);
-
-                        console.log(newValue);
+                        const foundBranch = otherBranches.find((el) => el.Name === newValue);
+                        setSelectedOtherBranchId(foundBranch ? foundBranch.Id : null);
                       }}
                       options={
                         otherBranches != [] ? otherBranches.map((el) => el.Name) : ["no option"]
@@ -431,9 +402,6 @@ function OtherBankTransfer() {
                     {renderSuccessSB}
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6}>
-                    {/* <MDButton variant="gradient" color="info" onClick={openInfoSB} fullWidth>
-                      info notification
-                    </MDButton> */}
                     <MDBox mb={2}>
                       <MDInput
                         mb={3}
@@ -459,7 +427,13 @@ function OtherBankTransfer() {
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6}>
                     <MDBox mb={2}>
-                      <MDInput type="text" label="Account Holder Name" fullWidth />
+                      <MDInput
+                        type="text"
+                        label="Account Holder Name"
+                        fullWidth
+                        value={accountHolderName}
+                        onChange={(e) => setAccountHolderName(e.target.value)}
+                      />
                     </MDBox>
 
                     {renderInfoSB}
@@ -482,16 +456,26 @@ function OtherBankTransfer() {
                       {" "}
                       <MDBox sx={{ flex: 0.3 }}>
                         {" "}
-                        <MDInput type="text" label="+95" fullWidth value={displayValue} disabled />
+                        <MDInput type="text" label="+95" fullWidth disabled />
                       </MDBox>
                       <MDBox sx={{ flex: 2 }}>
                         {" "}
                         <MDInput
                           type="text"
-                          label="Account Holder Account Number"
+                          label="Account Holder Phone Number"
                           fullWidth
-                          value={displayValue}
-                          onChange={handleChange}
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          inputProps={{
+                            maxLength: 15,
+                            inputMode: "numeric",
+                            pattern: "[0-9]*",
+                          }}
+                          onKeyPress={(e) => {
+                            if (!/[0-9]/.test(e.key)) {
+                              e.preventDefault();
+                            }
+                          }}
                         />
                       </MDBox>
                     </MDBox>
@@ -501,27 +485,11 @@ function OtherBankTransfer() {
                   <Grid item xs={12} sm={6} lg={6}>
                     <MDBox mb={2}>
                       <MDInput
-                        type="text"
+                        type="email"
                         label="Account Holder Email"
                         fullWidth
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                      />
-                    </MDBox>
-                    <Grid item xs={12} sm={6} lg={6}>
-                      {renderWarningSB}
-                    </Grid>
-                    {renderErrorSB}
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} lg={6}>
-                    <MDBox mb={2}>
-                      <MDInput
-                        type="text"
-                        label="Address"
-                        fullWidth
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                     </MDBox>
                     <Grid item xs={12} sm={6} lg={6}>

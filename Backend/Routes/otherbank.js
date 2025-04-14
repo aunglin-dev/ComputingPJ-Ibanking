@@ -17,5 +17,5 @@ Router.post(
 
 Router.post("/confirmOtherBankTransfer", confirmOtherBankTransfer);
 
-Router.post("/", validateOtherBankTransfer);
+Router.post("/validateOtherBankTransfer", validateOtherBankTransfer);
 export default Router;

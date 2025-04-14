@@ -32,6 +32,14 @@ export const fetchOtherBranchesByOtherBankId = async (req, res) => {
   }
 };
 
+function isValidEmail(email) {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  if (!emailRegex.test(email)) return false;
+
+  return true;
+}
+
 export const validateOtherBankTransfer = async (req, res) => {
   const transaction = await sequelize.transaction();
   try {
@@ -55,7 +63,8 @@ export const validateOtherBankTransfer = async (req, res) => {
       !toAccountNo ||
       !amount ||
       OtherBankId === null ||
-      !OtherBranchId
+      !OtherBranchId ||
+      !email
     ) {
       await transaction.rollback();
       return res.status(400).json({ message: "Missing required fields" });
@@ -75,6 +84,11 @@ export const validateOtherBankTransfer = async (req, res) => {
       return res.status(400).json({ message: "From account cannot found" });
     }
 
+    //Validate Email
+    if (!isValidEmail(email)) {
+      await transaction.rollback();
+      return res.status(400).json({ message: "Email Format Is wrong" });
+    }
     //  Validate Other BankId and OtherBranch Id
     const [otherbank, otherbranch] = await Promise.all([
       db.OtherBank.findOne({
@@ -118,6 +132,8 @@ export const validateOtherBankTransfer = async (req, res) => {
       description,
       senderName: sender.FullName,
       receiverName: receiverName,
+      otherbank: otherbank.BankName,
+      otherbranch: otherbranch.Name,
       OtherBankId,
       OtherBranchId,
       phone,
@@ -268,10 +284,12 @@ export const confirmOtherBankTransfer = async (req, res) => {
       TransactionAmount: newTransaction.TransactionAmount,
       Description: newTransaction.Description,
       OtherBank: otherbank.BankName,
-      OtherBranch: OtherBankId.Name,
+      OtherBranch: otherbranch.Name,
       ToAccountName: newTransaction.ToAccountName,
       Currency: newTransaction.Currency,
       senderName: sender.FullName,
+      phone,
+      email,
       TranType: newTransaction.TranType,
       TransactionDate: newTransaction.newTransaction,
     };

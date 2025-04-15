@@ -17,6 +17,13 @@ import ConfirmTransferOther from "layouts/Transfers/NormalTransfer/ConfirmTransf
 import OtherBankTransfer from "layouts/Transfers/NormalTransfer/OtherBankTransfer";
 import ValidateOtherBankTransfer from "layouts/Transfers/NormalTransfer/ValidateOtherBankTransfer";
 import ConfirmTransferOtherBank from "layouts/Transfers/NormalTransfer/ConfrimTransferOtherBank";
+import ScheduleOtherTransfer from "layouts/Transfers/ScheduleTransfer/OwnBankTranfer/OtherTransfer";
+import ScheduleOtherBankTransfer from "layouts/Transfers/ScheduleTransfer/OtherBankTransfer/OtherBankTransfer";
+import ScheduleValidateOtherTransfer from "layouts/Transfers/ScheduleTransfer/OwnBankTranfer/ValidateOtherTransfer";
+import ScheduleConfirmTransferOther from "layouts/Transfers/ScheduleTransfer/OwnBankTranfer/ConfirmTransferOther";
+import ScheduleValidateOtherBankTransfer from "layouts/Transfers/ScheduleTransfer/OtherBankTransfer/ValidateOtherBankTransfer";
+import ScheduleConfirmTransferOtherBank from "layouts/Transfers/ScheduleTransfer/OtherBankTransfer/ConfrimTransferOtherBank";
+
 // @mui icons
 import Icon from "@mui/material/Icon";
 import { IMPORT } from "stylis";
@@ -56,6 +63,8 @@ const routes = [
     route: "/profile",
     component: <Profile />,
   },
+
+  // <> Start Normal Transfer</>
   {
     type: "collapse",
     name: "Own Transfer",
@@ -80,6 +89,7 @@ const routes = [
     route: "/transfer/otherbanktransfer",
     component: <OtherBankTransfer />,
   },
+
   {
     type: "divider",
     name: "TransferValidate",
@@ -87,6 +97,61 @@ const routes = [
     icon: <Icon fontSize="small">Transfer</Icon>,
     route: "/transfer/validateTransfer",
     component: <ValidateTransfer />,
+  },
+
+  // <> End Normal Transfer</>
+
+  // <> Start Schedule Transfer</>
+  {
+    type: "collapse",
+    name: "ScheduleOtherTransfer",
+    key: "ScheduleOtherTransfer",
+    icon: <Icon fontSize="small">Schedule</Icon>,
+    route: "/transfer/scheduleothertransfer",
+    component: <ScheduleOtherTransfer />,
+  },
+  {
+    type: "collapse",
+    name: "ScheduleOtherBankTransfer",
+    key: "ScheduleTransferOtherBank",
+    icon: <Icon fontSize="small">Schedule</Icon>,
+    route: "/transfer/scheduleotherbanktransfer",
+    component: <ScheduleOtherBankTransfer />,
+  },
+
+  // <> End Schedule Transfer</>
+  {
+    type: "divider",
+    name: "ScheduleTransferValidate",
+    key: "Schedule",
+    icon: <Icon fontSize="small">Schedule</Icon>,
+    route: "/transfer/validateScheduleTransfer",
+    component: <ScheduleValidateOtherTransfer />,
+  },
+  {
+    type: "title",
+    name: "ScheduleTransferConfirm",
+    key: "ScheduleTransferConfirm",
+    icon: <Icon fontSize="small">Schedule</Icon>,
+    route: "/transfer/confirmScheduleOtherTransfer",
+    component: <ScheduleConfirmTransferOther />,
+  },
+  {
+    type: "title",
+    name: "ScheduleOtherBankTransferValidate",
+    key: "ScheduleOtherBankTransferValidate",
+    icon: <Icon fontSize="small">Schedule</Icon>,
+    route: "/transfer/ScheduleOtherBankTransferValidate",
+    component: <ScheduleValidateOtherBankTransfer />,
+  },
+
+  {
+    type: "title",
+    name: "ScheduleOtherBankTransferConfirm",
+    key: "ScheduleOtherBankTransferConfirm",
+    icon: <Icon fontSize="small">Schedule</Icon>,
+    route: "/transfer/scheduleOtherBankTransferConfirm",
+    component: <ScheduleConfirmTransferOtherBank />,
   },
   {
     type: "title",
@@ -129,7 +194,7 @@ const routes = [
     key: "TransferOtherBankConfirm",
     icon: <Icon fontSize="small">Transfer</Icon>,
     route: "/transfer/confirmotherBankTransfer",
-    component: <ConfirmTransferOtherBank />,
+    component: <ScheduleOtherTransfer />,
   },
   {
     type: "collapse",
@@ -140,21 +205,20 @@ const routes = [
     component: <CustomerSignIn />,
   },
   {
-    type: "title",
-    name: "Sign In (Admin)",
-    key: "sign-in(Admin)",
-    icon: <Icon fontSize="small">login</Icon>,
-    route: "/authentication/sign-in",
-    component: <SignIn />,
-  },
-
-  {
     type: "divider",
     name: "Sign Up",
     key: "sign-up",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/sign-up",
     component: <SignUp />,
+  },
+  {
+    type: "title",
+    name: "Sign In (Admin)",
+    key: "sign-in(Admin)",
+    icon: <Icon fontSize="small">login</Icon>,
+    route: "/authentication/sign-in",
+    component: <SignIn />,
   },
 ];
 

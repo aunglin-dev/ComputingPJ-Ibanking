@@ -2,6 +2,7 @@ import { db } from "../config.js";
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 import { where } from "sequelize";
+import emailtransporter from "../Service/emailservice.js";
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -207,17 +208,17 @@ export const updateUser = async (req, res, next) => {
     console.log("Updated User", updatedUser);
 
     // Create a transporter for sending the email
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: "linoscar724@gmail.com", // Your Gmail address
-        pass: "gdurhmxizwxkjlra", // Your Gmail app password
-      },
-      debug: true, // Enable debugging
-      logger: true, // Log to the console
-    });
+    // const transporter = nodemailer.createTransport({
+    //   host: "smtp.gmail.com",
+    //   port: 465,
+    //   secure: true,
+    //   auth: {
+    //     user: "linoscar724@gmail.com", // Your Gmail address
+    //     pass: "afxk qdzu xuap uind", // Your Gmail app password
+    //   },
+    //   debug: true, // Enable debugging
+    //   logger: true, // Log to the console
+    // });
 
     // Email options
     const mailOptions = {
@@ -229,7 +230,7 @@ export const updateUser = async (req, res, next) => {
 
     // Send the email
     try {
-      await transporter.sendMail(mailOptions);
+      await emailtransporter.sendMail(mailOptions);
       console.log("Email sent successfully");
     } catch (error) {
       console.error("Error sending email:", error);

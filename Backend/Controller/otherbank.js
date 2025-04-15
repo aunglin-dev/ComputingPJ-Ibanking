@@ -53,6 +53,7 @@ export const validateOtherBankTransfer = async (req, res) => {
       OtherBankId,
       OtherBranchId,
       phone,
+      transactionDate,
       email,
       receiverName,
     } = req.body;
@@ -68,6 +69,32 @@ export const validateOtherBankTransfer = async (req, res) => {
     ) {
       await transaction.rollback();
       return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    if (reqtranType == tranType.ScheduleTransferOtherBank && !transactionDate) {
+      await transaction.rollback();
+      return res
+        .status(400)
+        .json({ message: "Future Transaction Date cannot be null" });
+    }
+
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    const transactionDateObj = new Date(transactionDate);
+    transactionDateObj.setHours(0, 0, 0, 0);
+
+    console.log(transactionDateObj);
+    console.log(currentDate);
+    //Check Transaction Date
+    if (
+      reqtranType === tranType.ScheduleTransferOtherBank &&
+      transactionDateObj <= currentDate
+    ) {
+      await transaction.rollback();
+      return res.status(400).json({
+        message: "Future Transasction Date cannot be in the past",
+      });
     }
 
     //  Find and lock accounts
@@ -125,6 +152,15 @@ export const validateOtherBankTransfer = async (req, res) => {
     //  Commit transaction
     await transaction.commit();
 
+    const returnTransactionDate =
+      reqtranType == tranType.ScheduleTransferOtherBank
+        ? transactionDate
+        : new Date().toLocaleString("en-US", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          });
+
     res.status(200).json({
       fromAccountNo,
       toAccountNo,
@@ -138,11 +174,7 @@ export const validateOtherBankTransfer = async (req, res) => {
       OtherBranchId,
       phone,
       email,
-      transactionDate: new Date().toLocaleString("en-US", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      }),
+      transactionDate: returnTransactionDate,
     });
   } catch (error) {
     console.error("Transfer failed:", error);
@@ -176,6 +208,7 @@ export const confirmOtherBankTransfer = async (req, res) => {
       phone,
       email,
       receiverName,
+      transactionDate,
       reqtranType,
     } = req.body;
 
@@ -189,6 +222,30 @@ export const confirmOtherBankTransfer = async (req, res) => {
     ) {
       await transaction.rollback();
       return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    if (reqtranType == tranType.ScheduleTransferOtherBank && !transactionDate) {
+      await transaction.rollback();
+      return res
+        .status(400)
+        .json({ message: "Future Transaction Date cannot be null" });
+    }
+
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    const transactionDateObj = new Date(transactionDate);
+    transactionDateObj.setHours(0, 0, 0, 0);
+
+    //Check Transaction Date
+    if (
+      reqtranType === tranType.ScheduleTransferOtherBank &&
+      transactionDateObj <= currentDate
+    ) {
+      await transaction.rollback();
+      return res.status(400).json({
+        message: "Future Transasction Date cannot be in the past",
+      });
     }
 
     //  Find and lock accounts
@@ -240,16 +297,27 @@ export const confirmOtherBankTransfer = async (req, res) => {
       return res.status(400).json({ message: "Insufficient balance" });
     }
 
-    //  Perform atomic balance updates
-    await Promise.all([
-      db.CustomerAccount.update(
-        { Balance: sequelize.literal(`Balance - ${amount}`) },
-        {
-          where: { AccountNo: fromAccountNo, UserId: userId },
-          transaction,
-        }
-      ),
-    ]);
+    if (reqtranType == tranType.TransferOtherBank) {
+      //  Perform atomic balance updates
+      await Promise.all([
+        db.CustomerAccount.update(
+          { Balance: sequelize.literal(`Balance - ${amount}`) },
+          {
+            where: { AccountNo: fromAccountNo, UserId: userId },
+            transaction,
+          }
+        ),
+      ]);
+    }
+
+    const insertedTransactionDate =
+      reqtranType == tranType.ScheduleTransferOtherBank
+        ? transactionDate
+        : new Date().toLocaleString("en-US", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          });
 
     // Create transaction log
     const newTransaction = await db.TransferLog.create(
@@ -268,7 +336,7 @@ export const confirmOtherBankTransfer = async (req, res) => {
         Email: email,
         Status: "Success",
         TranType: reqtranType,
-        TransactionDate: new Date(),
+        TransactionDate: insertedTransactionDate,
       },
       { transaction }
     );
@@ -291,7 +359,7 @@ export const confirmOtherBankTransfer = async (req, res) => {
       phone,
       email,
       TranType: newTransaction.TranType,
-      TransactionDate: newTransaction.newTransaction,
+      TransactionDate: newTransaction.TransactionDate,
     };
 
     return res.status(200).json({

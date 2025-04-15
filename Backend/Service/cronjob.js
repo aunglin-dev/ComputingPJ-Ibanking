@@ -2,13 +2,40 @@ import cron from "node-cron";
 import { db, sequelize } from "../config.js";
 import { tranType } from "../Utils/TranType.js";
 import { TRANSACTION_STATUS } from "../Utils/TransactionStatus.js";
-
-// Constants for status and error messages
+import emailtransporter from "./emailservice.js";
+import scheduledTransferEmail from "../Utils/emailtemplate.js";
 
 const ERROR_MESSAGES = {
   ACCOUNT_NOT_FOUND: "One or both accounts not found",
   INSUFFICIENT_BALANCE: "Insufficient balance",
   TRANSFER_FAILED: "Transfer failed",
+  Email_Fail: "Email Failed",
+};
+
+const SendEmail = async (scheduleItem, userInfoForEmail) => {
+  if (!emailtransporter) {
+    throw new Error("Email transporter not initialized");
+  }
+  const scheduleEmailTemplate = scheduledTransferEmail(
+    scheduleItem,
+    userInfoForEmail
+  );
+
+  // Email options
+  const mailOptions = {
+    from: "linoscar724@gmail.com",
+    to: "aunglin2252003@gmail.com",
+    subject: scheduleEmailTemplate.subject,
+    text: scheduleEmailTemplate.text,
+    html: scheduleEmailTemplate.html,
+  };
+  try {
+    await emailtransporter.sendMail(mailOptions);
+    console.log("Email sent successfully");
+  } catch (error) {
+    console.error("Email sending failed:", error);
+    throw new Error(ERROR_MESSAGES.Email_Fail);
+  }
 };
 
 const performAccountTransfer = async (scheduleItem, transaction) => {
@@ -53,6 +80,13 @@ const performAccountTransfer = async (scheduleItem, transaction) => {
     { Status: TRANSACTION_STATUS.SUCCESS },
     { where: { Id: scheduleItem.Id }, transaction }
   );
+
+  const userInfoForEmail = await db.User.findOne({
+    where: { UserId: toAccount.UserId },
+  });
+
+  await transaction.commit();
+  await SendEmail(scheduleItem, userInfoForEmail);
 };
 
 const performOtherBankTransfer = async (scheduleItem, transaction) => {
@@ -123,7 +157,7 @@ const fetchScheduledTransfers = async () => {
     const [ownBankTransfers, otherBankTransfers] = await Promise.all([
       db.TransferLog.findAll({
         where: {
-          TranType: tranType.ScheduleTransferOther,
+          TranType: tranType.TransferOther,
           Status: TRANSACTION_STATUS.PENDING,
         },
         transaction,
@@ -169,7 +203,7 @@ const executeTransferJob = async () => {
 };
 
 const initializeCronJob = () => {
-  const cronJob = cron.schedule("* * * * * *", executeTransferJob, {
+  const cronJob = cron.schedule("30 2 * * *", executeTransferJob, {
     scheduled: true,
     timezone: "Asia/Yangon",
     runOnInit: false,

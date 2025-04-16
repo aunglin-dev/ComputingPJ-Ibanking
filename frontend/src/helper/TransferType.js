@@ -5,4 +5,5 @@ export const tranType = Object.freeze({
   ScheduleTransferOther: "ScheduleTransferOtherAccount",
   ScheduleTransferOtherBank: "ScheduleTransferOtherBank",
   RemittanceTransfer: "RemittanceTransfer",
+  BeneOwnBank: "BeneOwnBank",
 });

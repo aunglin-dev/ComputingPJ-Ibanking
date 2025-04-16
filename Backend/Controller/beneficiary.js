@@ -132,6 +132,7 @@ export const createBeneficiary = async (req, res) => {
 
 export const fetchAllBeneficiary = async (req, res) => {
   try {
+    const { userId } = req.body;
     const allBeneficiary = await db.Beneficary.findAll({
       where: {
         UserId: userId,

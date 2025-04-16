@@ -26,6 +26,7 @@ import ScheduleConfirmTransferOtherBank from "layouts/Transfers/ScheduleTransfer
 import RemittanceTransfer from "layouts/Transfers/RemittanceTransfer/RemittanceTransfer";
 import ValidateRemittanceTransfer from "layouts/Transfers/RemittanceTransfer/ValidateRemittanceTransfer";
 import ConfirmRemittanceTransfer from "layouts/Transfers/RemittanceTransfer/ConfrimRemittanceTransfer";
+import OwnBankBeneficiary from "layouts/Beneficiary/OwnBank/ownBankBeneficiary";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -66,6 +67,17 @@ const routes = [
     route: "/profile",
     component: <Profile />,
   },
+  // <> Start Beneficiary Transfer</>
+  {
+    type: "collapse",
+    name: "Manage Beneficiary",
+    key: "Beneficiary",
+    icon: <Icon fontSize="small">Beneficiary</Icon>,
+    route: "/beneficiary/manageOwnBankBeneficiary",
+    component: <OwnBankBeneficiary />,
+  },
+  // <> End Beneficiary Transfer</>
+
   // <> Start Remittance Transfer</>
 
   {
@@ -94,7 +106,7 @@ const routes = [
     route: "/transfer/remittancetransferConfirm",
     component: <ConfirmRemittanceTransfer />,
   },
-  // <> Start Remittance Transfer</>
+  // <> End Remittance Transfer</>
 
   // <> Start Normal Transfer</>
   {

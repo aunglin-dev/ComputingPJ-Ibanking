@@ -180,13 +180,25 @@ POST  http://localhost:8800/api/beneficiary/createBeneficiary
 Content-Type:application/json
 
 {
-  "userId" : 9 ,
-      "toAccountNo":"100003459310",
+  "userId" : 10017 ,
+      "toAccountNo":"100003459310864",
       "nickname": "adddaddd5d",
       "reqtranType": "sfdfafd",
       "description": "dafdafd"
 
 }
+
+
+
+#######
+
+POST    http://localhost:8800/api/beneficiary/fetchAllBeneficiary
+Content-Type:application/json
+
+{
+  "userId" : 9
+}
+
 
 #####
 

@@ -8,6 +8,7 @@ import OtherBank from "./Model/OtherBank.js";
 import OtherBranches from "./Model/OtherBranches.js";
 
 import dotenv from "dotenv";
+import Beneficiary from "./Model/Beneficiary.js";
 dotenv.config();
 
 const sequelize = new Sequelize(
@@ -34,6 +35,7 @@ db.AccountTypes = AccountTypes(sequelize);
 db.TransferLog = TransferLog(sequelize);
 db.OtherBranches = OtherBranches(sequelize);
 db.OtherBank = OtherBank(sequelize);
+db.Beneficary = Beneficiary(sequelize);
 
 const initDB = async () => {
   try {

@@ -122,6 +122,25 @@ Content-Type:application/json
 
 #######
 
+POST  http://localhost:8800/api/transfer/validateRemittanceTransfer
+Content-Type:application/json
+
+{
+   "userId" : 9 ,
+"fromAccountNo" : "100005247913660",
+ "NRC" : "idsok",
+  "amount" : 100.0,
+   "descrption" : "blah blah ",
+   "email" :"test@gmail.com"
+
+
+
+
+}
+
+
+#######
+
 POST  http://localhost:8800/api/transfer/confirmTransfer
 Content-Type:application/json
 
@@ -156,20 +175,17 @@ Content-Type:application/json
 
 #####
 
-POST  http://localhost:8800/api/otherbank/confirmOtherBankTransfer
+POST  http://localhost:8800/api/transfer/confirmRemittanceTransfer
 Content-Type:application/json
 
 {
    "userId" : 9 ,
     "fromAccountNo": "100005247913660",
-    "toAccountNo" : "10000114293",
-      "OtherBankId": 23,
-      "OtherBranchId" :238,
-    "amount" :"1000.00",
+    "NRC" : "NRC test",
+    "amount" :"100.00",
     "descrption": "blah blah",
-    "transactionDate":"05/11/2025",
     "receiverName" : "something",
-    "reqtranType": "ScheduleTransferOtherBank",
+    "reqtranType": "RemittanceTransfer",
     "phone": "0931530189",
     "email": "exp@gmail.com"
 

@@ -85,8 +85,7 @@ const performAccountTransfer = async (scheduleItem, transaction) => {
     where: { UserId: toAccount.UserId },
   });
 
-  await transaction.commit();
-  await SendEmail(scheduleItem, userInfoForEmail);
+  return userInfoForEmail;
 };
 
 const performOtherBankTransfer = async (scheduleItem, transaction) => {
@@ -127,16 +126,22 @@ const performOtherBankTransfer = async (scheduleItem, transaction) => {
 const processScheduledTransfers = async (schedules, transaction) => {
   if (!schedules || schedules.length === 0) return;
 
+  const successfulTransfers = [];
+
   for (const scheduleItem of schedules) {
     try {
       if (scheduleItem.TranType == tranType.ScheduleTransferOther) {
-        await performAccountTransfer(scheduleItem, transaction);
+        const emailUser = await performAccountTransfer(
+          scheduleItem,
+          transaction
+        );
+        successfulTransfers.push({ scheduleItem, userInfoForEmail: emailUser });
       } else {
         await performOtherBankTransfer(scheduleItem, transaction);
       }
     } catch (error) {
       console.error(
-        `Transfer failed for ID ${scheduleItem.Id}:`,
+        `Transfer failed for ID ${scheduleItem.Id}: =>>>>>   to Account ${scheduleItem.ToAccount}`,
         error.message
       );
 
@@ -148,6 +153,8 @@ const processScheduledTransfers = async (schedules, transaction) => {
       );
     }
   }
+
+  return successfulTransfers;
 };
 
 //Fetch all Schedule transfers
@@ -157,7 +164,7 @@ const fetchScheduledTransfers = async () => {
     const [ownBankTransfers, otherBankTransfers] = await Promise.all([
       db.TransferLog.findAll({
         where: {
-          TranType: tranType.TransferOther,
+          TranType: tranType.ScheduleTransferOther,
           Status: TRANSACTION_STATUS.PENDING,
         },
         transaction,
@@ -182,6 +189,7 @@ const fetchScheduledTransfers = async () => {
 //Main Cron Function
 const executeTransferJob = async () => {
   const transaction = await sequelize.transaction();
+  let successfulTransfers = [];
   try {
     console.log("Starting scheduled transfer processing...");
     const scheduledTransfers = await fetchScheduledTransfers();
@@ -192,7 +200,10 @@ const executeTransferJob = async () => {
     }
 
     console.log(`Processing ${scheduledTransfers.length} transfers`);
-    await processScheduledTransfers(scheduledTransfers, transaction);
+    successfulTransfers = await processScheduledTransfers(
+      scheduledTransfers,
+      transaction
+    );
     await transaction.commit();
     console.log("Successfully processed scheduled transfers");
   } catch (error) {
@@ -200,10 +211,22 @@ const executeTransferJob = async () => {
     console.error("Error processing transfers:", error.message);
     throw error;
   }
+
+  //Send Email
+  for (const { scheduleItem, userInfoForEmail } of successfulTransfers) {
+    try {
+      await SendEmail(scheduleItem, userInfoForEmail);
+    } catch (emailErr) {
+      console.error(
+        `Failed to send email for transfer ID ${scheduleItem.Id}:`,
+        emailErr.message
+      );
+    }
+  }
 };
 
 const initializeCronJob = () => {
-  const cronJob = cron.schedule("30 2 * * *", executeTransferJob, {
+  const cronJob = cron.schedule("30 2 * * * *", executeTransferJob, {
     scheduled: true,
     timezone: "Asia/Yangon",
     runOnInit: false,

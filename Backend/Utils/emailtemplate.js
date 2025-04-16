@@ -1,7 +1,7 @@
 const scheduledTransferEmail = (scheduleitem, userinfo) => {
   return {
-    subject: `Scheduled Transfer Confirmation - ${transferDetails.referenceNumber}`,
-    text: `Dear ${userinfo.FullName},
+    subject: `Scheduled Transfer Confirmation - ${scheduleitem.TransactionId}`,
+    text: `Dear ${scheduleitem.ToAccountName},
 
 Your transfer has been successfully scheduled transfer with the following details:
 

@@ -304,6 +304,27 @@ function isValidEmail(email) {
   return true;
 }
 
+//Validate NRC
+
+function validateNRC(nrc) {
+  if (!nrc || typeof nrc !== "string") return false;
+
+  const nrcPattern = /^(\d{1,2})\/([A-Za-z]{1,6})\/(\d{6})$/;
+
+  // Test format
+  const match = nrc.match(nrcPattern);
+  if (!match) return false;
+
+  const [_, townshipCode, townshipName, numbers] = match;
+
+  //  Validate township code
+  const townshipNum = parseInt(townshipCode, 10);
+  if (townshipNum < 1 || townshipNum > 14) return false;
+
+  //  Validate numbers
+  return numbers.length === 6 && /^\d+$/.test(numbers);
+}
+
 export const validateRemittanceTransfer = async (req, res) => {
   const transaction = await sequelize.transaction();
   try {
@@ -314,6 +335,7 @@ export const validateRemittanceTransfer = async (req, res) => {
       amount,
       description,
       reqtranType,
+      OtherBranchId,
       phone,
       transactionDate,
       email,
@@ -321,11 +343,16 @@ export const validateRemittanceTransfer = async (req, res) => {
     } = req.body;
 
     // Validate input
-    if (!fromAccountNo || !NRC || !amount || !email) {
+    if (!fromAccountNo || !NRC || !amount || !email || !OtherBranchId) {
       await transaction.rollback();
       return res.status(400).json({ message: "Missing required fields" });
     }
 
+    //Validate NRC
+    if (!validateNRC(NRC)) {
+      await transaction.rollback();
+      return res.status(400).json({ message: "NRC Format is incorrect" });
+    }
     //  Find and lock accounts
     const [fromAccount] = await Promise.all([
       db.CustomerAccount.findOne({
@@ -354,6 +381,20 @@ export const validateRemittanceTransfer = async (req, res) => {
       }),
     ]);
 
+    const [otherbranch] = await Promise.all([
+      db.OtherBranches.findOne({
+        where: { Id: OtherBranchId, BankId: 23 },
+        transaction,
+      }),
+    ]);
+
+    if (!otherbranch) {
+      await transaction.rollback();
+      return res
+        .status(400)
+        .json({ message: " other branch is not undefined" });
+    }
+
     // Check balance
     if (Number(fromAccount.Balance) < Number(amount)) {
       await transaction.rollback();
@@ -381,6 +422,8 @@ export const validateRemittanceTransfer = async (req, res) => {
       receiverName: receiverName,
       phone,
       email,
+      OtherBranchId,
+      otherbranch: otherbranch.Name,
       transactionDate: returnTransactionDate,
     });
   } catch (error) {
@@ -405,16 +448,21 @@ export const confirmRemittanceTransfer = async (req, res) => {
       phone,
       email,
       receiverName,
+      OtherBranchId,
       transactionDate,
       reqtranType,
     } = req.body;
 
     // Validate input
-    if (!fromAccountNo || !NRC || !amount) {
+    if (!fromAccountNo || !NRC || !amount || !OtherBranchId) {
       await transaction.rollback();
       return res.status(400).json({ message: "Missing required fields" });
     }
 
+    if (!validateNRC(NRC)) {
+      await transaction.rollback();
+      return res.status(400).json({ message: "NRC Format is incorrect" });
+    }
     //  Find and lock accounts
     const [fromAccount] = await Promise.all([
       db.CustomerAccount.findOne({
@@ -438,6 +486,20 @@ export const confirmRemittanceTransfer = async (req, res) => {
         transaction,
       }),
     ]);
+
+    const [otherbranch] = await Promise.all([
+      db.OtherBranches.findOne({
+        where: { Id: OtherBranchId, BankId: 23 },
+        transaction,
+      }),
+    ]);
+
+    if (!otherbranch) {
+      await transaction.rollback();
+      return res
+        .status(400)
+        .json({ message: " other branch is not undefined" });
+    }
 
     // Check balance
     if (Number(fromAccount.Balance) < Number(amount)) {
@@ -476,6 +538,7 @@ export const confirmRemittanceTransfer = async (req, res) => {
         Description: description,
         ToAccountName: receiverName,
         Currency: "MMK",
+        ToBranch: OtherBranchId,
         Phone: phone,
         Email: email,
         Status: "Success",
@@ -492,11 +555,12 @@ export const confirmRemittanceTransfer = async (req, res) => {
       UserId: newTransaction.UserId,
       FromAccount: newTransaction.FromAccount,
       TransactionId: newTransaction.TransactionId,
-      ToAccount: newTransaction.ToAccount,
+      NRC,
       TransactionAmount: newTransaction.TransactionAmount,
       Description: newTransaction.Description,
       ToAccountName: newTransaction.ToAccountName,
       Currency: newTransaction.Currency,
+      OtherBranch: otherbranch.Name,
       senderName: sender.FullName,
       phone,
       email,

@@ -23,6 +23,9 @@ import ScheduleValidateOtherTransfer from "layouts/Transfers/ScheduleTransfer/Ow
 import ScheduleConfirmTransferOther from "layouts/Transfers/ScheduleTransfer/OwnBankTranfer/ConfirmTransferOther";
 import ScheduleValidateOtherBankTransfer from "layouts/Transfers/ScheduleTransfer/OtherBankTransfer/ValidateOtherBankTransfer";
 import ScheduleConfirmTransferOtherBank from "layouts/Transfers/ScheduleTransfer/OtherBankTransfer/ConfrimTransferOtherBank";
+import RemittanceTransfer from "layouts/Transfers/RemittanceTransfer/RemittanceTransfer";
+import ValidateRemittanceTransfer from "layouts/Transfers/RemittanceTransfer/ValidateRemittanceTransfer";
+import ConfirmRemittanceTransfer from "layouts/Transfers/RemittanceTransfer/ConfrimRemittanceTransfer";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -63,6 +66,35 @@ const routes = [
     route: "/profile",
     component: <Profile />,
   },
+  // <> Start Remittance Transfer</>
+
+  {
+    type: "collapse",
+    name: "Remittance Transfer",
+    key: "Remittance",
+    icon: <Icon fontSize="small">Remittance</Icon>,
+    route: "/transfer/remittancetransfer",
+    component: <RemittanceTransfer />,
+  },
+
+  {
+    type: "divider",
+    name: "RemittanceTransferValidate",
+    key: "RemittanceTransferValidate",
+    icon: <Icon fontSize="small">Remittance</Icon>,
+    route: "/transfer/remittancetransferValidate",
+    component: <ValidateRemittanceTransfer />,
+  },
+
+  {
+    type: "title",
+    name: "RemittanceTransferConfirm",
+    key: "RemittanceTransferConfirm",
+    icon: <Icon fontSize="small">Remittance</Icon>,
+    route: "/transfer/remittancetransferConfirm",
+    component: <ConfirmRemittanceTransfer />,
+  },
+  // <> Start Remittance Transfer</>
 
   // <> Start Normal Transfer</>
   {

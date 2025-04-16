@@ -128,10 +128,11 @@ Content-Type:application/json
 {
    "userId" : 9 ,
 "fromAccountNo" : "100005247913660",
- "NRC" : "idsok",
+ "NRC" : "12/KaMaYa/123456",
   "amount" : 100.0,
    "descrption" : "blah blah ",
-   "email" :"test@gmail.com"
+   "email" :"test@gmail.com",
+   "OtherBranchId": 240
 
 
 
@@ -184,6 +185,7 @@ Content-Type:application/json
     "NRC" : "NRC test",
     "amount" :"100.00",
     "descrption": "blah blah",
+    "OtherBranchId": 240,
     "receiverName" : "something",
     "reqtranType": "RemittanceTransfer",
     "phone": "0931530189",

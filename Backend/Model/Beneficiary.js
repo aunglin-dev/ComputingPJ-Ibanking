@@ -53,7 +53,7 @@ export default (sequelize) => {
         type: DataTypes.BOOLEAN,
         allowNull: true,
       },
-      AccountNameName: {
+      AccountName: {
         type: DataTypes.STRING(225),
         allowNull: true,
       },

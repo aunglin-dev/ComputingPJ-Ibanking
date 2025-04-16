@@ -7,6 +7,7 @@ import adminRouter from "./Routes/admin.js";
 import userRouter from "./Routes/users.js";
 import accountTypeRouter from "./Routes/accountTypes.js";
 import transferRouter from "./Routes/transfer.js";
+import beneficiaryRouter from "./Routes/beneficiary.js";
 import customerAccountRouter from "./Routes/customerAccount.js";
 import otherbank from "./Routes/otherbank.js";
 import cronjob from "./Service/cronjob.js";
@@ -34,6 +35,7 @@ app.use("/api/accountTypes", accountTypeRouter);
 app.use("/api/transfer", transferRouter);
 app.use("/api/customerAccount", customerAccountRouter);
 app.use("/api/otherbank", otherbank);
+app.use("/api/beneficiary", beneficiaryRouter);
 
 app.use((err, req, res, next) => {
   const status = err.status || 500;

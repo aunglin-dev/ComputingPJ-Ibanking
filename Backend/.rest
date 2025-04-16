@@ -169,19 +169,48 @@ Content-Type:application/json
     "amount" :"1000.00",
     "descrption": "blah blah",
     "transactionDate":"04/16/2025",
-      
     "reqtranType": "ScheduleTransferOtherAccount"
+
+}
+
+
+#######
+
+POST  http://localhost:8800/api/beneficiary/createBeneficiary
+Content-Type:application/json
+
+{
+  "userId" : 9 ,
+      "toAccountNo":"100003459310",
+      "nickname": "adddaddd5d",
+      "reqtranType": "sfdfafd",
+      "description": "dafdafd"
 
 }
 
 #####
 
+POST http://localhost:8800/api/beneficiary/createBeneficiary
+Content-Type:application/json
+{
+     "userId" : 9 ,
+      "toAccountNo":"100003459310864",
+      "nickname": "adddad",
+      "reqtranType": "sfdfafd",
+      "description": "dafdafd",
+
+}
+
+
+
+
+#####
 POST  http://localhost:8800/api/transfer/confirmRemittanceTransfer
 Content-Type:application/json
 
 {
    "userId" : 9 ,
-    "fromAccountNo": "100005247913660",
+    "fromAccountNo": "100003459310864",
     "NRC" : "NRC test",
     "amount" :"100.00",
     "descrption": "blah blah",

@@ -1,4 +1,4 @@
-import { Sequelize } from "sequelize";
+import { Sequelize, Op } from "sequelize";
 import Admin from "./Model/admin.js";
 import User from "./Model/User.js";
 import CustomerAccount from "./Model/CustomerAccount.js";
@@ -56,4 +56,4 @@ export const connect = async () => {
     throw error;
   }
 };
-export { sequelize, db };
+export { sequelize, db, Op };

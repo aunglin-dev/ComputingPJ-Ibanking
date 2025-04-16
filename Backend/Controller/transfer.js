@@ -63,7 +63,6 @@ export const validateTransfer = async (req, res) => {
       amount,
       description,
       reqtranType,
-
       receiverName,
     } = req.body;
 

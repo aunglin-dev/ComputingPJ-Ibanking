@@ -8,6 +8,7 @@ import SignIn from "layouts/authentication/sign-in";
 import CustomerSignIn from "layouts/authentication/Customer_Sign_In";
 import SignUp from "layouts/authentication/sign-up";
 import FirstLogin from "layouts/authentication/FirstLogin";
+import TransactionLimit from "layouts/TransactionLimit/TransactionLimit";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -53,6 +54,18 @@ const routes = [
     route: "/notifications",
     component: <Notifications />,
   },
+
+  //Start Transaction Limit
+  {
+    type: "collapse",
+    name: "TransactionLimit",
+    key: "TransactionLimit",
+    icon: <Icon fontSize="small">Transaction Limit</Icon>,
+    route: "/transactionLimit/Create",
+    component: <TransactionLimit />,
+  },
+
+  //End Transaction
   {
     type: "collapse",
     name: "Profile",
@@ -64,7 +77,7 @@ const routes = [
   {
     type: "collapse",
     name: "Sign In",
-    key: "sign-in",
+    key: "Cus_sign-in",
     icon: <Icon fontSize="small">login</Icon>,
     route: "/authentication/Customer_Sign_In",
     component: <CustomerSignIn />,
@@ -72,7 +85,7 @@ const routes = [
   {
     type: "collapse",
     name: "Sign In",
-    key: "sign-in",
+    key: "Auth_sign-in",
     icon: <Icon fontSize="small">login</Icon>,
     route: "/authentication/sign-in",
     component: <SignIn />,

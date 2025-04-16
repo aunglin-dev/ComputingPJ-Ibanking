@@ -9,6 +9,7 @@ import OtherBranches from "./Model/OtherBranches.js";
 
 import dotenv from "dotenv";
 import Beneficiary from "./Model/Beneficiary.js";
+import TransactionLimit from "./Model/TransactionLimit.js";
 dotenv.config();
 
 const sequelize = new Sequelize(
@@ -28,6 +29,8 @@ const sequelize = new Sequelize(
 );
 
 const db = {};
+
+//Database Init
 db.Admin = Admin(sequelize);
 db.User = User(sequelize);
 db.CustomerAccount = CustomerAccount(sequelize);
@@ -36,6 +39,7 @@ db.TransferLog = TransferLog(sequelize);
 db.OtherBranches = OtherBranches(sequelize);
 db.OtherBank = OtherBank(sequelize);
 db.Beneficary = Beneficiary(sequelize);
+db.TrasnsactionLimit = TransactionLimit(sequelize);
 
 const initDB = async () => {
   try {

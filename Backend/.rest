@@ -214,7 +214,42 @@ Content-Type:application/json
 }
 
 
+#####
 
+POST http://localhost:8800/api/translimit/createTransactionLimit
+Content-Type:application/json
+{
+     "adminId": 4,
+      "limitCode": "T_001",
+      "currency": "MMK",
+      "limitType": "tESTING",
+      "minAmount": 1000.00,
+      "maxAmount": 10000.00,
+      "rate": 0.85,
+      "description":"TESTIGN ONE" 
+
+}
+
+#####
+POST  http://localhost:8800/api/translimit/createTransactionLimit
+Content-Type:application/json
+
+{
+  "adminId": 4,
+      "limitCode": "T_001",
+      "currency": "MMK",
+      "limitType": "tESTING",
+      "minAmount": 10001.00,
+      "maxAmount": 150000.00,
+      "rate": 0.85,
+      "description":"TESTIGN ONE" 
+
+}
+
+
+#####
+
+GET  http://localhost:8800/api/translimit/fetchAllTransactionLimits
 
 #####
 POST  http://localhost:8800/api/transfer/confirmRemittanceTransfer

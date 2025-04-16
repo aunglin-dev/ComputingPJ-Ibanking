@@ -283,10 +283,6 @@ function OwnTransfer() {
                     {renderSuccessSB}
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6}>
-                    {/* <MDButton variant="gradient" color="info" onClick={openInfoSB} fullWidth>
-                      info notification
-                    </MDButton> */}
-
                     <Autocomplete
                       value={selectedValueForToAcc}
                       onChange={(event, newValue) => {

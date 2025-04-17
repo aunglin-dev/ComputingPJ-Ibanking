@@ -9,6 +9,7 @@ import CustomerSignIn from "layouts/authentication/Customer_Sign_In";
 import SignUp from "layouts/authentication/sign-up";
 import FirstLogin from "layouts/authentication/FirstLogin";
 import TransactionLimit from "layouts/TransactionLimit/TransactionLimit";
+import EditTransactionLimit from "layouts/TransactionLimit/EditTransactionLimit";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -65,6 +66,14 @@ const routes = [
     component: <TransactionLimit />,
   },
 
+  {
+    type: "title",
+    name: "EditTransactionLimit",
+    key: "EditTransactionLimit",
+    icon: <Icon fontSize="small">Transaction Limit</Icon>,
+    route: "/transactionLimit/Edit",
+    component: <EditTransactionLimit />,
+  },
   //End Transaction
   {
     type: "collapse",

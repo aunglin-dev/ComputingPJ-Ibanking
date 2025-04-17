@@ -15,20 +15,15 @@ import TextField from "@mui/material/TextField";
 import { Controller } from "react-hook-form";
 import MDInput from "components/MDInput";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import axios from "axios";
-import { string } from "prop-types";
-import { useNavigate } from "react-router-dom";
-import DataTable from "examples/Tables/DataTable";
-import beneficiaryList from "../../layouts/Beneficiary/data/beneficiaryList";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 
-function TransactionLimit() {
+function EditTransactionLimit() {
   const [successSB, setSuccessSB] = useState(false);
   const [infoSB, setInfoSB] = useState(false);
   const [warningSB, setWarningSB] = useState(false);
@@ -49,86 +44,14 @@ function TransactionLimit() {
   const [CurrencyValue, setCurrency] = useState("");
   const [description, setDescription] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
-  const [rows, setRows] = useState([]);
-  const [columns] = useState([
-    { Header: "Limit Code", accessor: "limitCode", align: "left" },
-    { Header: "Limit Type", accessor: "type", align: "left" },
-    { Header: "Currency", accessor: "currency", align: "center" },
-    { Header: "Charges Rate", accessor: "rate", align: "center" },
-    { Header: "Minimum Transaction Amount", accessor: "MinTraxAmt", align: "center" },
-    { Header: "Maximum Transaction Amount", accessor: "MaxTraxAmt", align: "center" },
-    { Header: "Limit Code Description", accessor: "LimitCodeDesc", align: "center" },
-    { Header: "Action", accessor: "edit", align: "center" },
-    { Header: "Action", accessor: "delete", align: "center" },
-  ]);
+
+  //State from previous Location
+  const { state } = useLocation();
 
   //Navigate
   const navigate = useNavigate();
-  const { state } = useLocation();
-  //FetchTransactionLimit
-  const fetchAllTransactionLimit = async () => {
-    try {
-      const res = await axios.get("/translimit/fetchAllTransactionLimits");
 
-      const formattedRows = res.data.data.map((el) => ({
-        limitCode: el.LimitCode,
-        type: el.LimitType,
-        currency: el.Currency,
-        rate: el.Rate,
-        MinTraxAmt: el.MinTransactionAmount,
-        MaxTraxAmt: el.MaxTransactionAmount,
-        LimitCodeDesc: el.LimitCodeDesc,
-        edit: (
-          <EditIcon
-            onClick={() => handleEdit(el.Id)}
-            fontSize="medium"
-            curs
-            style={{ fontSize: "1.5rem", cursor: "pointer" }}
-          />
-        ),
-        delete: (
-          <DeleteIcon
-            onClick={() => handleApprove(el.Id)}
-            fontSize="medium"
-            curs
-            style={{ fontSize: "1.5rem", cursor: "pointer" }}
-          />
-        ),
-      }));
-
-      setRows(formattedRows);
-    } catch (err) {
-      console.error("Error fetching Transaction Limit", err);
-    }
-  };
-
-  //handle
-  const handleEdit = async (translimitId) => {
-    navigate("/transactionLimit/Edit", {
-      state: translimitId,
-    });
-  };
-  //Delete Transaction Limit
-  const handleApprove = async (translimitId) => {
-    const confirmed = window.confirm("Please Confirm to delete this Limit Code?");
-    if (!confirmed) return;
-
-    try {
-      await axios.put("/translimit/deleteTransactionLimit", {
-        translimitId,
-      });
-
-      fetchAllTransactionLimit();
-      setWarningSB(true);
-    } catch (err) {
-      console.error("Deleted error:", err);
-      alert("Failed to Delete");
-    }
-  };
-
-  useEffect(() => {
-    fetchAllTransactionLimit();
-  }, [errorSB, successSB]);
+  console.log("Transaction Id ___________", state);
 
   const CurrencyList = ["MMK", "USD"];
 
@@ -145,9 +68,39 @@ function TransactionLimit() {
     setDescription("");
   };
 
+  //Fetch Specific Row
+  const fetchtransLimit = async () => {
+    try {
+      const res = await axios.post("/translimit/detail", {
+        translimitId: state,
+      });
+
+      if (res.status == 200) {
+        const translimit = res.data.data;
+        setRate(translimit.Rate);
+        setDisplayRateValue(translimit.Rate);
+        setLimitCode(translimit.LimitCode);
+        setLimitType(translimit.LimitType);
+        setCurrency(translimit.Currency);
+        setDisplayMinValue(translimit.MinTransactionAmount);
+        setDisplayMaxValue(translimit.MaxTransactionAmount);
+        setMinRawValue(translimit.MinTransactionAmount);
+        setMaxRawValue(translimit.MaxTransactionAmount);
+        setDescription(translimit.LimitCodeDesc);
+      }
+    } catch (err) {
+      console.error("Error fetching Transaction Limit", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchtransLimit();
+  }, []);
+
   const validateTransfer = async () => {
     try {
       const validateModel = {
+        translimitId: state,
         adminId: currentAdmin?.AdminID,
         limitCode: limitCode,
         limitType,
@@ -159,13 +112,16 @@ function TransactionLimit() {
         description: description,
       };
       console.log(validateModel);
-      const res = await axios.post("/translimit/createTransactionLimit", validateModel);
+      const res = await axios.put("/translimit/updateTransactionLimit", validateModel);
 
       console.log(res);
       if (res.status == 200) {
         setSuccessSB(true);
         resetAllStates();
         const navigatedModel = res.data;
+        navigate("/transactionLimit/Create", {
+          state: true,
+        });
         console.log("NavigatedModel_____________", navigatedModel);
       } else {
         window.alert("something is wrong");
@@ -252,11 +208,11 @@ function TransactionLimit() {
 
   const alertContent = (name) => (
     <MDTypography variant="body2" color="white">
-      Transaction Limit
+      A simple {name} alert with{" "}
       <MDTypography component="a" href="#" variant="body2" fontWeight="medium" color="white">
-        {"  "} has been updated {"  "}
+        an example link
       </MDTypography>
-      Successfully
+      . Give it a click if you like.
     </MDTypography>
   );
 
@@ -317,18 +273,12 @@ function TransactionLimit() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      {state && (
-        <MDAlert mt={2} color="success" dismissible>
-          {alertContent("success")}
-        </MDAlert>
-      )}
-
-      <MDBox mt={2} mb={3}>
+      <MDBox mt={6} mb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={12}>
             <Card>
               <MDBox p={2} lineHeight={0}>
-                <MDTypography variant="h5">Transaction Limit</MDTypography>
+                <MDTypography variant="h5">Edit Transaction Limit</MDTypography>
                 <MDTypography variant="button" color="text" fontWeight="regular">
                   Setting Transaction Limit and Charges For Transferring Funds
                 </MDTypography>
@@ -343,6 +293,7 @@ function TransactionLimit() {
                         fullWidth
                         value={limitCode}
                         onChange={(e) => setLimitCode(e.target.value)}
+                        disabled
                       />
                     </MDBox>
 
@@ -426,7 +377,7 @@ function TransactionLimit() {
                         type="text"
                         label="Description"
                         fullWidth
-                        value={description}
+                        value={description ?? ""}
                         onChange={(e) => setDescription(e.target.value)}
                       />
                     </MDBox>
@@ -436,49 +387,31 @@ function TransactionLimit() {
                 </Grid>
               </MDBox>
               <MDBox mt={1} mb={1} mr={2} display="flex" justifyContent="flex-end">
+                <MDButton
+                  type="button"
+                  variant="gradient"
+                  onClick={() => navigate("/transactionLimit/Create")}
+                  sx={{
+                    mr: 2,
+                    border: "2px solid",
+                    "&:hover": {
+                      backgroundColor: "transparent",
+                      border: "2px solid",
+                    },
+                  }}
+                >
+                  Cancel
+                </MDButton>
                 <MDButton type="submit" variant="gradient" color="error" onClick={validateTransfer}>
-                  Add
+                  Save
                 </MDButton>
               </MDBox>
             </Card>
           </Grid>
         </Grid>
       </MDBox>
-
-      {/* Start Transaction Limit Listing  */}
-      <Grid container spacing={3} mt={5} pb={3} justifyContent="center">
-        <Grid item xs={12}>
-          <Card>
-            <MDBox
-              mx={2}
-              mt={-3}
-              py={2}
-              px={2}
-              variant="gradient"
-              bgColor="error"
-              borderRadius="lg"
-              coloredShadow="info"
-            >
-              <MDTypography variant="h6" color="white" fontWeight="regular">
-                Transaction Limits List
-              </MDTypography>
-            </MDBox>
-            <MDBox pt={3}>
-              <DataTable
-                table={{ columns, rows }}
-                isSorted={false}
-                entriesPerPage={true}
-                showTotalEntries={true}
-                noEndBorder
-              />
-            </MDBox>
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* End Transaction Limit Listing  */}
     </DashboardLayout>
   );
 }
 
-export default TransactionLimit;
+export default EditTransactionLimit;

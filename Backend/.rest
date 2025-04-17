@@ -251,6 +251,44 @@ Content-Type:application/json
 
 GET  http://localhost:8800/api/translimit/fetchAllTransactionLimits
 
+
+#####
+
+PUT   http://localhost:8800/api/translimit/deleteTransactionLimit
+Content-Type:application/json
+
+{
+  "translimitId" :7,
+   "adminId": 4
+}
+
+#####
+
+POST   http://localhost:8800/api/translimit/detail
+Content-Type:application/json
+
+{
+  "translimitId" :7
+   
+}
+
+#####
+PUT   http://localhost:8800/api/translimit/updateTransactionLimit
+Content-Type:application/json
+
+{
+  "translimitId" :1,
+   "adminId": 4,
+      "currency": "MMK",
+      "limitType": "tESTING Update",
+      "minAmount": 400000.00,
+      "maxAmount": 450000.00,
+      "rate": 2.0,
+      "description":"TESTIGN ONE" 
+
+}
+
+
 #####
 POST  http://localhost:8800/api/transfer/confirmRemittanceTransfer
 Content-Type:application/json

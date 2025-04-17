@@ -39,7 +39,7 @@ db.TransferLog = TransferLog(sequelize);
 db.OtherBranches = OtherBranches(sequelize);
 db.OtherBank = OtherBank(sequelize);
 db.Beneficary = Beneficiary(sequelize);
-db.TrasnsactionLimit = TransactionLimit(sequelize);
+db.TransactionLimit = TransactionLimit(sequelize);
 
 const initDB = async () => {
   try {

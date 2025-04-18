@@ -31,44 +31,33 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 
-function CreateSchemeCode() {
+function EditSchemeCode() {
   const [successSB, setSuccessSB] = useState(false);
   const [infoSB, setInfoSB] = useState(false);
   const [warningSB, setWarningSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
-  const [minRawValue, setMinRawValue] = useState(""); //
-  const [maxRawValue, setMaxRawValue] = useState(""); //
-  const [displayMinValue, setDisplayMinValue] = useState("");
-  const [displayMaxValue, setDisplayMaxValue] = useState("");
 
-  const [rate, setRate] = useState(""); //
-  const [displayRateValue, setDisplayRateValue] = useState("");
   const [schemeCode, setSchemeCode] = useState("");
-  const [limitType, setLimitType] = useState("");
+
   const [transactionLimit, setTransactionLimits] = useState([
     { transLimitId: null, limitCode: null },
   ]);
   const [accountType, setAccountTypes] = useState([{ accountId: null, accountType: null }]);
 
-  const [toAccountNoList, setToAccountNoList] = useState([]);
   const { currentAdmin } = useSelector((state) => state.admin);
-  const [selectedValueForFromAcc, setSelectedValueForFromAcc] = useState(null);
-  const [CurrencyValue, setCurrency] = useState("");
-  const [description, setDescription] = useState(null);
+
   const [errorMessage, setErrorMessage] = useState("");
 
   //Navigate
   const navigate = useNavigate();
   const { state } = useLocation();
 
-  const CurrencyList = ["MMK", "USD"];
-
   const [columns] = useState([
     { Header: "No", accessor: "rowNumber", align: "left", width: "5%" },
-    // { Header: "Particular", accessor: "particular", align: "left", width: "20%" },
+
     { Header: "Account Type", accessor: "accountType", align: "left", width: "40%" },
     { Header: "Transaction Limit Code", accessor: "transCode", align: "left", width: "40%" },
-    // { Header: "Ofiice Account", accessor: "officeAccount", align: "left", width: "20%" },
+
     { Header: "Action", accessor: "delete", align: "center" },
   ]);
 
@@ -208,8 +197,31 @@ function CreateSchemeCode() {
           accountType: el.ProductName,
         }));
 
-        console.log(AccountArr);
         setAccountTypes(AccountArr);
+        setSchemeCode(state);
+      }
+    } catch (err) {
+      console.error("Error fetching Transaction Limit", err);
+    }
+  };
+
+  //Fetch SchemeCode
+  const fetchSchemeCode = async () => {
+    try {
+      const res = await axios.post("/schemeCode/fetchSpecificSchemCode", {
+        schemeCode: state,
+      });
+      if (res.status === 200) {
+        const rowValueArr = res.data.data.map((el, index) => ({
+          rowNumber: index + 1,
+          accountType: el.AccountType,
+          accountId: el.AccountId,
+          transLimitId: el.LimitCodeId,
+          transactionLimit: el.LimitCode,
+        }));
+
+        console.log("Row Value", rowValueArr);
+        setAllValue(rowValueArr);
       }
     } catch (err) {
       console.error("Error fetching Transaction Limit", err);
@@ -218,6 +230,7 @@ function CreateSchemeCode() {
   useEffect(() => {
     fetchAllAccountType();
     fetchAllTransactionLimit();
+    fetchSchemeCode();
   }, []);
 
   const validateTransfer = async () => {
@@ -230,12 +243,12 @@ function CreateSchemeCode() {
           .map((el) => ({
             accountType: el.accountType,
             accountId: el.accountId,
-            transactionLimit: el.transactionLimit,
+            limitCode: el.transactionLimit,
             transLimitId: el.transLimitId,
           })),
       };
       console.log("SchemeCode Model_________", validateModel);
-      const res = await axios.post("/schemeCode/createSchemeCode", validateModel);
+      const res = await axios.put("/schemeCode/updateSchemeCode", validateModel);
 
       console.log(res);
       console.log(res);
@@ -244,6 +257,11 @@ function CreateSchemeCode() {
 
         const navigatedModel = res.data;
         console.log("NavigatedModel_____________", navigatedModel);
+
+        navigate("/schemeCode/Index", {
+          state: true,
+          nameddd: "Edited",
+        });
       } else {
         window.alert("something is wrong");
       }
@@ -290,23 +308,12 @@ function CreateSchemeCode() {
     return value.replace(/[^\d.]/g, "");
   };
 
-  const alertContent = (name) => (
-    <MDTypography variant="body2" color="white">
-      Scheme Code
-      <MDTypography component="a" href="#" variant="body2" fontWeight="medium" color="white">
-        {"  "} has been {name}
-        {"  "}
-      </MDTypography>
-      Successfully
-    </MDTypography>
-  );
-
   const renderSuccessSB = (
     <MDSnackbar
       color="success"
       icon="check"
-      title="SchemeCode Created"
-      content="Transaction Limit Saved Successfully"
+      title="SchemeCode Updated"
+      content="Transaction Limit Updated Successfully"
       dateTime="Just Now"
       open={successSB}
       onClose={closeSuccessSB}
@@ -358,18 +365,12 @@ function CreateSchemeCode() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      {state && (
-        <MDAlert mt={2} color="success" dismissible>
-          {alertContent("success")}
-        </MDAlert>
-      )}
-
       <MDBox mt={2} mb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={12}>
             <Card>
               <MDBox p={2} lineHeight={0}>
-                <MDTypography variant="h5">Create Scheme Code</MDTypography>
+                <MDTypography variant="h5">Edit Scheme Code</MDTypography>
                 <MDTypography variant="button" color="text" fontWeight="regular">
                   Setting Scheme Code to define transaction limit for each account types
                 </MDTypography>
@@ -388,7 +389,7 @@ function CreateSchemeCode() {
                           type="text"
                           fullWidth
                           value={schemeCode}
-                          onChange={(e) => setSchemeCode(e.target.value)}
+                          disabled
                           sx={{
                             "& .MuiInputBase-root": {
                               height: 40,
@@ -487,4 +488,4 @@ function CreateSchemeCode() {
   );
 }
 
-export default CreateSchemeCode;
+export default EditSchemeCode;

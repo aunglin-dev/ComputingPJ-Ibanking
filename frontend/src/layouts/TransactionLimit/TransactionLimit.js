@@ -365,6 +365,7 @@ function TransactionLimit() {
                   <Grid item xs={12} sm={6} lg={6}>
                     <Autocomplete
                       value={CurrencyValue}
+                      isOptionEqualToValue={(option, value) => option.value === value.value}
                       onChange={(event, newValue) => {
                         setCurrency(newValue);
 

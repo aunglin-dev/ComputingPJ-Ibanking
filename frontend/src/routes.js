@@ -11,6 +11,8 @@ import FirstLogin from "layouts/authentication/FirstLogin";
 import TransactionLimit from "layouts/TransactionLimit/TransactionLimit";
 import EditTransactionLimit from "layouts/TransactionLimit/EditTransactionLimit";
 import CreateSchemeCode from "layouts/SchemeCodeSetUp/CreateSchemeCode";
+import SchemeCodeSetup from "layouts/SchemeCodeSetUp/SchemeCode";
+import EditSchemeCode from "layouts/SchemeCodeSetUp/EditSchemeCode";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -66,13 +68,31 @@ const routes = [
     route: "/transactionLimit/Create",
     component: <TransactionLimit />,
   },
+
+  //Start SchemeCode
   {
     type: "collapse",
+    name: "SchemeCodeSetup",
+    key: "SchemeCodeSetup",
+    icon: <Icon fontSize="small">SchemeCode</Icon>,
+    route: "/schemeCode/Index",
+    component: <SchemeCodeSetup />,
+  },
+  {
+    type: "title",
     name: "CreateSchemeCode",
     key: "CreateSchemeCode",
     icon: <Icon fontSize="small">Create SchemeCode</Icon>,
     route: "/schemeCode/Create",
     component: <CreateSchemeCode />,
+  },
+  {
+    type: "title",
+    name: "EditSchemeCode",
+    key: "EditSchemeCode",
+    icon: <Icon fontSize="small">Edit SchemeCode</Icon>,
+    route: "/schemeCode/Edit",
+    component: <EditSchemeCode />,
   },
   {
     type: "title",

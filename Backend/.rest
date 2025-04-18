@@ -51,6 +51,50 @@ Content-Type:application/json
   "Status" : true
 
 }
+####
+
+Get http://localhost:8800/api/schemeCode/fetchSchemeCode
+
+######
+POST  http://localhost:8800/api/schemeCode/fetchSpecificSchemCode
+Content-Type:application/json
+
+{
+"schemeCode" : "Testing 2"
+
+
+}
+
+######
+POST  http://localhost:8800/api/schemeCode/createSchemeCode
+Content-Type:application/json
+
+{
+"schemeCode" : "Al_008", 
+"accountLimitArr": [{"accountId": 4, "accountType": "Current Account","transLimitId": 3, "limitCode": "T_004"},{"accountId": 6, "accountType": "SME Loans","transLimitId": 3, "limitCode": "T_005"}], 
+"adminId": 5
+
+}
+
+######
+PUT   http://localhost:8800/api/schemeCode/updateSchemeCode
+Content-Type:application/json
+
+{
+"schemeCode" : "Al_007", 
+"accountLimitArr": [{"accountId": 4, "accountType": "Current Account","transLimitId": 3, "limitCode": "T_004"},{"accountId": 6, "accountType": "SME Loans","transLimitId": 3, "limitCode": "T_005"}], 
+"adminId": 5
+
+}
+
+######
+POST  http://localhost:8800/api/schemeCode/deleteSchemeCode
+Content-Type:application/json
+
+{
+"schemeCode" : "Al_008"
+
+}
 
 #######
 

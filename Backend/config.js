@@ -10,6 +10,7 @@ import OtherBranches from "./Model/OtherBranches.js";
 import dotenv from "dotenv";
 import Beneficiary from "./Model/Beneficiary.js";
 import TransactionLimit from "./Model/TransactionLimit.js";
+import SchemeCode from "./Model/SchemeCode.js";
 dotenv.config();
 
 const sequelize = new Sequelize(
@@ -40,6 +41,7 @@ db.OtherBranches = OtherBranches(sequelize);
 db.OtherBank = OtherBank(sequelize);
 db.Beneficary = Beneficiary(sequelize);
 db.TransactionLimit = TransactionLimit(sequelize);
+db.SchemeCode = SchemeCode(sequelize);
 
 const initDB = async () => {
   try {

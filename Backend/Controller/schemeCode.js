@@ -114,7 +114,7 @@ export const fetchAllSchemeCodes = async (req, res) => {
       data: fetchSchemeCodes,
     });
   } catch (err) {
-    console.error("TransactionLimit", error);
+    console.error("TransactionLimit", err);
     throw err;
   }
 };

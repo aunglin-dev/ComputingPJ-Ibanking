@@ -1,16 +1,53 @@
-import { db } from "../config.js";
+import { db, sequelize } from "../config.js";
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 import { where } from "sequelize";
 import emailtransporter from "../Service/emailservice.js";
+import { Where } from "sequelize/lib/utils";
+import SchemeCode from "../Model/SchemeCode.js";
 
 export const getAllUsers = async (req, res) => {
   try {
     const users = await db.User.findAll();
 
+    if (!users) {
+      return res.status(400).json({ message: " No User Is found" });
+    }
+
+    const accountTypeLists = [];
+
+    for (const user of users) {
+      // Get all customer accounts for this user
+      const noOfAccounts = await db.CustomerAccount.findAll({
+        where: { UserId: user.UserId },
+      });
+
+      // Extract all AccountIds
+      const accountIds = noOfAccounts.map((acc) => acc.AccountId);
+
+      // Fetch account types related to these AccountIds
+      const accountTypeList = await Promise.all(
+        accountIds.map((accountId) =>
+          db.AccountTypes.findOne({
+            where: { AccountId: accountId },
+          })
+        )
+      );
+
+      accountTypeLists.push({
+        noOfAccountList: noOfAccounts.length,
+        accountTypeList: accountTypeList.filter(Boolean), // removes nulls if any
+      });
+    }
+
+    const returnUserObj = users.map((user, index) => ({
+      ...user.dataValues,
+      accountSummary: accountTypeLists[index],
+    }));
+
     res.status(200).json({
-      message: "Users Retrieve successfully",
-      data: users, // The admin data you want to return
+      message: "Users retrieved successfully",
+      data: returnUserObj,
     });
   } catch (error) {
     console.error("Error fetching Users:", error);
@@ -91,9 +128,8 @@ export const requestUserAccount = async (req, res, next) => {
       PhoneNumber: phoneNumber,
       Email: email,
       Address: address,
-      CIFID: "12932",
       Gender: gender,
-      UserType: "Requested",
+      UserType: null,
     });
 
     await Promise.all(
@@ -225,7 +261,7 @@ export const updateUser = async (req, res, next) => {
       from: "linoscar724@gmail.com", // Must match the email in `auth.user`
       to: "aunglin2252003@gmail.com", // Valid recipient email
       subject: "UserType Update Notification",
-      text: `Dear ${user.FullName},\n\nYour account's UserType has been updated to: ${UserType} .\n\nIf you did not request this update, please contact support.\n\n You Can Now Login Into SMED Bank Internet Banking System \n\n By User Name : ${user.UserName} \n\n Temporary Password : ${userSec.Password} `,
+      text: `Dear ${user.FullName},\n\nYour account has been Approved  .\n\nIf you did not request this update, please contact support.\n\n You Can Now Login Into SMED Bank Internet Banking System \n\n By User Name : ${user.UserName} \n\n Temporary Password : ${userSec.Password} `,
     };
 
     // Send the email
@@ -249,6 +285,55 @@ export const updateUser = async (req, res, next) => {
   }
 };
 
+export const lockUnlock = async (req, res, next) => {
+  const transaction = await sequelize.transaction();
+  try {
+    const { UserId, condition } = req.body;
+
+    const user = await db.User.findOne({
+      where: { UserId },
+      transaction,
+    });
+
+    if (!user) {
+      await transaction.rollback();
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const updatedUser = await db.User.update(
+      {
+        IsLoginLockUser: condition,
+      },
+      {
+        where: {
+          UserId: UserId,
+        },
+        transaction,
+      }
+    );
+
+    //Check Affected Rows
+    if (updatedUser.length < 0) {
+      return res.status(404).json({ message: " no changes made for User" });
+    }
+
+    //  Commit transaction
+    await transaction.commit();
+
+    res.status(200).json({
+      message: "User updated successfully",
+    });
+  } catch (err) {
+    if (transaction) await transaction.rollback();
+    console.error("Lock failed:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Transaction failed",
+      error: err.message,
+    });
+  }
+};
+
 const generatePassword = (length = 12) => {
   const charset =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
@@ -260,4 +345,63 @@ const generatePassword = (length = 12) => {
   }
 
   return password;
+};
+
+export const updateSchemeCode = async (req, res) => {
+  const transaction = await sequelize.transaction();
+  try {
+    const { UserId, schemeCode } = req.body;
+
+    const user = await db.User.findOne({
+      where: { UserId },
+      transaction,
+    });
+
+    if (!user) {
+      await transaction.rollback();
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isValidSchemeCode = await db.SchemeCode.findOne({
+      where: { SchemeCode: schemeCode },
+      transaction,
+    });
+
+    if (!isValidSchemeCode) {
+      await transaction.rollback();
+      return res.status(404).json({ message: "Invalid SchemeCode" });
+    }
+
+    const updatedUser = await db.User.update(
+      {
+        SchemeCode: schemeCode,
+      },
+      {
+        where: {
+          UserId: UserId,
+        },
+        transaction,
+      }
+    );
+
+    //Check Affected Rows
+    if (updatedUser.length < 0) {
+      return res.status(404).json({ message: " no changes made for User" });
+    }
+
+    //  Commit transaction
+    await transaction.commit();
+
+    res.status(200).json({
+      message: "SchemeCode Updated successfully",
+    });
+  } catch (err) {
+    if (transaction) await transaction.rollback();
+    console.error("Lock failed:", err);
+    return res.status(500).json({
+      success: false,
+      message: "SchemeCode Update failed",
+      error: err.message,
+    });
+  }
 };

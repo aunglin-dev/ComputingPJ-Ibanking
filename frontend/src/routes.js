@@ -15,6 +15,7 @@ import SchemeCodeSetup from "layouts/SchemeCodeSetUp/SchemeCode";
 import EditSchemeCode from "layouts/SchemeCodeSetUp/EditSchemeCode";
 import Particular from "layouts/Particular/ParticularList";
 import EditParticular from "layouts/Particular/EditParticular";
+import EditCustomerSchemeCode from "layouts/tables/EditCustomerSchemeCode";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -35,6 +36,14 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/CustomerList/Index",
     component: <Tables />,
+  },
+  {
+    type: "title",
+    name: "EditCustomerSchemeCode ",
+    key: "EditCustomerSchemeCode",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/CustomerList/Edit",
+    component: <EditCustomerSchemeCode />,
   },
   {
     type: "collapse",

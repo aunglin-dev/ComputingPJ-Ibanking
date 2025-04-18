@@ -4,6 +4,8 @@ import {
   signup,
   updateUser,
   requestUserAccount,
+  lockUnlock,
+  updateSchemeCode,
 } from "../Controller/user.js";
 
 const Router = express.Router();
@@ -16,5 +18,9 @@ Router.post("/signup", signup);
 Router.post("/requestUserAccount", requestUserAccount);
 
 Router.put("/ApproveUser", updateUser);
+
+Router.put("/lockUnlock", lockUnlock);
+
+Router.put("/updateSchemeCode", updateSchemeCode);
 
 export default Router;

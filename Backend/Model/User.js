@@ -41,9 +41,9 @@ export default (sequelize) => {
         type: DataTypes.STRING(225),
         allowNull: true,
       },
-      CIFID: {
+      SchemeCode: {
         type: DataTypes.STRING(225),
-        allowNull: false,
+        allowNull: true,
       },
       Address: {
         type: DataTypes.STRING(225),
@@ -82,8 +82,8 @@ export default (sequelize) => {
         allowNull: true,
       },
       UserType: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
       },
     },
     {

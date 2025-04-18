@@ -497,6 +497,26 @@ Content-Type:application/json
 
 
 
+#####
+Put http://localhost:8800/api/user/updateSchemeCode
+Content-Type:application/json
+
+{
+ "UserId": 3,
+"schemeCode": "A007"
+}
+
+#####
+Put http://localhost:8800/api/user/lockUnlock
+Content-Type:application/json
+
+{
+ "UserId": 3,
+ "condition":1
+}
+
+
+
 ####
 POST http://localhost:8800/api/accountTypes/createAccountType
 Content-Type:application/json

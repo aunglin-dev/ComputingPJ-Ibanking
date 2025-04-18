@@ -13,6 +13,7 @@ import otherbank from "./Routes/otherbank.js";
 import transactionLimitRouter from "./Routes/transactionLimit.js";
 import cronjob from "./Service/cronjob.js";
 import schemeCodeRouter from "./Routes/schemeCode.js";
+import particularRouter from "./Routes/particular.js";
 
 const app = express();
 const port = 8800;
@@ -40,6 +41,7 @@ app.use("/api/otherbank", otherbank);
 app.use("/api/beneficiary", beneficiaryRouter);
 app.use("/api/translimit", transactionLimitRouter);
 app.use("/api/schemeCode", schemeCodeRouter);
+app.use("/api/particular", particularRouter);
 
 app.use((err, req, res, next) => {
   const status = err.status || 500;

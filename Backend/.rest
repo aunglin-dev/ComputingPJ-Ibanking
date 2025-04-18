@@ -77,6 +77,33 @@ Content-Type:application/json
 }
 
 ######
+POST  http://localhost:8800/api/particular/fetchOneParticular
+Content-Type:application/json
+
+{
+ "Id": 3 
+
+
+}
+
+######
+PUT  http://localhost:8800/api/particular/editParticular
+Content-Type:application/json
+
+{
+"particularId": 2, 
+"chargesRate" : 0.8, 
+"officeAccountId" : 12,
+ "adminId" : 5
+
+
+}
+
+
+####
+GET http://localhost:8800/api/particular/fetchParticular
+
+######
 PUT   http://localhost:8800/api/schemeCode/updateSchemeCode
 Content-Type:application/json
 

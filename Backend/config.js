@@ -11,6 +11,8 @@ import dotenv from "dotenv";
 import Beneficiary from "./Model/Beneficiary.js";
 import TransactionLimit from "./Model/TransactionLimit.js";
 import SchemeCode from "./Model/SchemeCode.js";
+import OfficeAccounts from "./Model/OfficeAccounts.js";
+import Particular from "./Model/Particular.js";
 dotenv.config();
 
 const sequelize = new Sequelize(
@@ -42,6 +44,8 @@ db.OtherBank = OtherBank(sequelize);
 db.Beneficary = Beneficiary(sequelize);
 db.TransactionLimit = TransactionLimit(sequelize);
 db.SchemeCode = SchemeCode(sequelize);
+db.OfficeAccounts = OfficeAccounts(sequelize);
+db.Particular = Particular(sequelize);
 
 const initDB = async () => {
   try {

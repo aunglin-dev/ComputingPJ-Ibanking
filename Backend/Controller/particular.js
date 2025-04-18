@@ -6,16 +6,18 @@ export const getAllParticular = async (req, res) => {
 
     const returnedObj = [];
     for (const account of accounts) {
-      let officAccount = await db.Particular.findOne({
+      let officeAccount = await db.OfficeAccounts.findOne({
         where: {
           Id: account.OfficeAccountId,
         },
       });
 
       let tempObj = {
+        Id: account.Id,
+        OfficeAccountId: account.OfficeAccountId,
         TranType: account.TranType,
         OfficeAccountNumber:
-          officAccount === null ? null : officAccount.OfficeAccountNumber,
+          officeAccount === null ? null : officeAccount.OfficeAccountNumber,
         ChargesRate: account.ChargesRate,
       };
 
@@ -40,7 +42,7 @@ export const getOneParticular = async (req, res) => {
       },
     });
 
-    let officAccount = await db.Particular.findOne({
+    let officAccount = await db.OfficeAccounts.findOne({
       where: {
         Id: account.OfficeAccountId,
       },
@@ -48,6 +50,7 @@ export const getOneParticular = async (req, res) => {
 
     let returnedObj = {
       TranType: account.TranType,
+      OfficeAccountId: account.OfficeAccountId,
       OfficeAccountNumber:
         officAccount === null ? null : officAccount.OfficeAccountNumber,
       ChargesRate: account.ChargesRate,
@@ -120,5 +123,25 @@ export const updateTransactionLimit = async (req, res) => {
   } catch (error) {
     console.error("Error updating Particular:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getAllOfficeAccount = async (req, res) => {
+  try {
+    let officeAccounts = await db.OfficeAccounts.findAll();
+
+    if (!officeAccounts) {
+      return res
+        .status(400)
+        .json({ message: "officeAccount Not Fount is required" });
+    }
+
+    res.status(200).json({
+      message: "Particular Retrieve successfully",
+      data: officeAccounts,
+    });
+  } catch (error) {
+    console.error("Error Particular:", error);
+    throw error;
   }
 };

@@ -13,6 +13,8 @@ import EditTransactionLimit from "layouts/TransactionLimit/EditTransactionLimit"
 import CreateSchemeCode from "layouts/SchemeCodeSetUp/CreateSchemeCode";
 import SchemeCodeSetup from "layouts/SchemeCodeSetUp/SchemeCode";
 import EditSchemeCode from "layouts/SchemeCodeSetUp/EditSchemeCode";
+import Particular from "layouts/Particular/ParticularList";
+import EditParticular from "layouts/Particular/EditParticular";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -101,6 +103,26 @@ const routes = [
     icon: <Icon fontSize="small">Transaction Limit</Icon>,
     route: "/transactionLimit/Edit",
     component: <EditTransactionLimit />,
+  },
+
+  //Start Particular
+
+  {
+    type: "divider",
+    name: "EditParticular",
+    key: "EditParticular",
+    icon: <Icon fontSize="small">Particular</Icon>,
+    route: "/particular/Edit",
+    component: <EditParticular />,
+  },
+
+  {
+    type: "collapse",
+    name: "ParticularList",
+    key: "ParticularList",
+    icon: <Icon fontSize="small">Particular</Icon>,
+    route: "/particular/Index",
+    component: <Particular />,
   },
 
   //End Transaction

@@ -12,6 +12,7 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Icon from "@mui/material/Icon";
+import MDTypography from "components/MDTypography";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -50,7 +51,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
 
   useEffect(() => {
     // Setting the navbar type
-    console.log(currentAdmin);
+    console.log("Current Admin____ In Dashboard", currentAdmin);
     if (fixedNavbar) {
       setNavbarType("sticky");
     } else {
@@ -121,17 +122,21 @@ function DashboardNavbar({ absolute, light, isMini }) {
       <Toolbar sx={(theme) => navbarContainer(theme)}>
         <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
           <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
-          <Typography ml={10}>
-            Welcome: {currentAdmin == undefined ? "smth" : currentAdmin?.Username}
-          </Typography>
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
-            <MDBox pr={1}>
-              <MDInput label="Search here" />
+            <MDBox pr={4} lineHeight={2} display="flex" flexDirection="column">
+              <MDTypography variant="button" color="text" fontWeight="regular" align="left">
+                Welcome: {currentAdmin == undefined ? "smth" : currentAdmin?.FullName}
+              </MDTypography>
+
+              <MDTypography variant="button" color="text" fontWeight="regular" align="center">
+                Last Login Date : 2025-02-22 15:56:37
+              </MDTypography>
             </MDBox>
+
             <MDBox color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in/basic">
+              <Link to="/profile">
                 <IconButton sx={navbarIconButton} size="small" disableRipple>
                   <Icon sx={iconsStyle}>account_circle</Icon>
                 </IconButton>
@@ -156,7 +161,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               >
                 <Icon sx={iconsStyle}>settings</Icon>
               </IconButton>
-              <IconButton
+              {/* <IconButton
                 size="small"
                 disableRipple
                 color="inherit"
@@ -167,7 +172,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 onClick={handleOpenMenu}
               >
                 <Icon sx={iconsStyle}>notifications</Icon>
-              </IconButton>
+              </IconButton> */}
               {renderMenu()}
             </MDBox>
           </MDBox>

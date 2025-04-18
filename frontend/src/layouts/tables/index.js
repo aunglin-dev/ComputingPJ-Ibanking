@@ -33,7 +33,7 @@ function Tables() {
                 py={3}
                 px={2}
                 variant="gradient"
-                bgColor="info"
+                bgColor="error"
                 borderRadius="lg"
                 coloredShadow="info"
               >

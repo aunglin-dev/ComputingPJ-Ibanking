@@ -33,7 +33,7 @@ const routes = [
     name: "Customer Lists",
     key: "tables",
     icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/tables",
+    route: "/CustomerList/Index",
     component: <Tables />,
   },
   {

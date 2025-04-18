@@ -99,7 +99,9 @@ Content-Type:application/json
 
 }
 
+####
 
+Get http://localhost:8800/api/dashboard/fetchAllUserTypes
 ####
 GET http://localhost:8800/api/particular/fetchParticular
 

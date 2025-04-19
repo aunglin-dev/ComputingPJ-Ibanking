@@ -1,19 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// @mui material components
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 
@@ -50,152 +34,73 @@ import team1 from "assets/images/team-1.jpg";
 import team2 from "assets/images/team-2.jpg";
 import team3 from "assets/images/team-3.jpg";
 import team4 from "assets/images/team-4.jpg";
+import { useSelector } from "react-redux";
 
 function Overview() {
+  const { currentAdmin } = useSelector((state) => state.admin);
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox mb={2} />
-      <Header>
+      <MDBox mb={2} lg={2} />
+      <Header lg={4}>
         <MDBox mt={5} mb={3}>
           <Grid container spacing={1}>
-            <Grid item xs={12} md={6} xl={4}>
-              <PlatformSettings />
-            </Grid>
-            <Grid item xs={12} md={6} xl={4} sx={{ display: "flex" }}>
-              <Divider orientation="vertical" sx={{ ml: -2, mr: 1 }} />
-              <ProfileInfoCard
-                title="profile information"
-                description="Hi, I’m Alec Thompson, Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality)."
-                info={{
-                  fullName: "Alec M. Thompson",
-                  mobile: "(44) 123 1234 123",
-                  email: "alecthompson@mail.com",
-                  location: "USA",
-                }}
-                social={[
-                  {
-                    link: "https://www.facebook.com/CreativeTim/",
-                    icon: <FacebookIcon />,
-                    color: "facebook",
-                  },
-                  {
-                    link: "https://twitter.com/creativetim",
-                    icon: <TwitterIcon />,
-                    color: "twitter",
-                  },
-                  {
-                    link: "https://www.instagram.com/creativetimofficial/",
-                    icon: <InstagramIcon />,
-                    color: "instagram",
-                  },
-                ]}
-                action={{ route: "", tooltip: "Edit Profile" }}
-                shadow={false}
-              />
-              <Divider orientation="vertical" sx={{ mx: 0 }} />
-            </Grid>
-            <Grid item xs={12} xl={4}>
-              <ProfilesList title="conversations" profiles={profilesListData} shadow={false} />
-            </Grid>
+            <Divider orientation="vertical" lg={8} sx={{ ml: -2, mr: 1 }} />
+            <ProfileInfoCard
+              lg={12}
+              title="profile information"
+              description="SMED Bank's Bank Staff"
+              info={{
+                fullName: currentAdmin?.FullName,
+                mobile: currentAdmin?.PhoneNumber,
+                email: currentAdmin?.Email,
+              }}
+              social={[
+                {
+                  link: "https://www.facebook.com/CreativeTim/",
+                  icon: <FacebookIcon />,
+                  color: "facebook",
+                },
+                {
+                  link: "https://twitter.com/creativetim",
+                  icon: <TwitterIcon />,
+                  color: "twitter",
+                },
+                {
+                  link: "https://www.instagram.com/creativetimofficial/",
+                  icon: <InstagramIcon />,
+                  color: "instagram",
+                },
+              ]}
+              action={{}}
+              shadow={false}
+            />
+            <Divider orientation="vertical" sx={{ mx: 0 }} />
           </Grid>
         </MDBox>
         <MDBox pt={2} px={2} lineHeight={1.25}>
           <MDTypography variant="h6" fontWeight="medium">
-            Projects
+            Bank History
           </MDTypography>
           <MDBox mb={1}>
             <MDTypography variant="button" color="text">
-              Architects design houses
+              Bank History Small and Medium Enterprise Development Bank Aiming to provide as much
+              capital as possible for the development of small and medium enterprises State Law and
+              Order Restoration Council; Under the guidance of Chairman Senior General Than Shwe,
+              Chairman of the Central Committee for Industrial Development of Myanmar Lt-General
+              Myint Aung; Under the supervision of General Kyaw Than, Chairman of the Myanmar
+              Industrial Development Working Committee were in accordance with the Law on the
+              Financial Institutions of Myanmar enacted in 1990, the State Law and Order Restoration
+              Council, Secretary (2) Lt-General Tin Oo, shareholders; With members of the Board of
+              Directors 1996 On 15 February, the Myanmar Industrial Development Bank (MIDB) opened
+              its headquarters. After that, under the guidance of the Board of Directors of the
+              Bank, with the aim of further developing the small and medium industry sector. On 22
+              September, the SME Development Bank (SMID Bank) was renamed. 2019 On 21 August, it was
+              renamed the Small and Medium Enterprise Development Bank (SMED Bank).
             </MDTypography>
           </MDBox>
         </MDBox>
-        <MDBox p={2}>
-          <Grid container spacing={6}>
-            <Grid item xs={12} md={6} xl={3}>
-              <DefaultProjectCard
-                image={homeDecor1}
-                label="project #2"
-                title="modern"
-                description="As Uber works through a huge amount of internal management turmoil."
-                action={{
-                  type: "internal",
-                  route: "/pages/profile/profile-overview",
-                  color: "info",
-                  label: "view project",
-                }}
-                authors={[
-                  { image: team1, name: "Elena Morison" },
-                  { image: team2, name: "Ryan Milly" },
-                  { image: team3, name: "Nick Daniel" },
-                  { image: team4, name: "Peterson" },
-                ]}
-              />
-            </Grid>
-            <Grid item xs={12} md={6} xl={3}>
-              <DefaultProjectCard
-                image={homeDecor2}
-                label="project #1"
-                title="scandinavian"
-                description="Music is something that everyone has their own specific opinion about."
-                action={{
-                  type: "internal",
-                  route: "/pages/profile/profile-overview",
-                  color: "info",
-                  label: "view project",
-                }}
-                authors={[
-                  { image: team3, name: "Nick Daniel" },
-                  { image: team4, name: "Peterson" },
-                  { image: team1, name: "Elena Morison" },
-                  { image: team2, name: "Ryan Milly" },
-                ]}
-              />
-            </Grid>
-            <Grid item xs={12} md={6} xl={3}>
-              <DefaultProjectCard
-                image={homeDecor3}
-                label="project #3"
-                title="minimalist"
-                description="Different people have different taste, and various types of music."
-                action={{
-                  type: "internal",
-                  route: "/pages/profile/profile-overview",
-                  color: "info",
-                  label: "view project",
-                }}
-                authors={[
-                  { image: team4, name: "Peterson" },
-                  { image: team3, name: "Nick Daniel" },
-                  { image: team2, name: "Ryan Milly" },
-                  { image: team1, name: "Elena Morison" },
-                ]}
-              />
-            </Grid>
-            <Grid item xs={12} md={6} xl={3}>
-              <DefaultProjectCard
-                image={homeDecor4}
-                label="project #4"
-                title="gothic"
-                description="Why would anyone pick blue over pink? Pink is obviously a better color."
-                action={{
-                  type: "internal",
-                  route: "/pages/profile/profile-overview",
-                  color: "info",
-                  label: "view project",
-                }}
-                authors={[
-                  { image: team4, name: "Peterson" },
-                  { image: team3, name: "Nick Daniel" },
-                  { image: team2, name: "Ryan Milly" },
-                  { image: team1, name: "Elena Morison" },
-                ]}
-              />
-            </Grid>
-          </Grid>
-        </MDBox>
       </Header>
-      <Footer />
     </DashboardLayout>
   );
 }

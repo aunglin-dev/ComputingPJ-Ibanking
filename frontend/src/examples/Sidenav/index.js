@@ -23,6 +23,9 @@ import SidenavCollapse from "examples/Sidenav/SidenavCollapse";
 // Custom styles for the Sidenav
 import SidenavRoot from "examples/Sidenav/SidenavRoot";
 import sidenavLogoLabel from "examples/Sidenav/styles/sidenav";
+import { useDispatch } from "react-redux";
+import { Adminlogout } from "../../Storage/admin.js";
+import { useNavigate } from "react-router-dom";
 
 // Material Dashboard 2 React context
 import {
@@ -34,9 +37,21 @@ import {
 
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const [controller, dispatch] = useMaterialUIController();
-  const { miniSidenav, transparentSidenav, whiteSidenav, darkMode, sidenavColor } = controller;
+  const dispatchRedux = useDispatch();
+  const navigate = useNavigate();
+
+  const {
+    miniSidenav,
+    transparentSidenav,
+    whiteSidenav = true,
+    darkMode,
+    sidenavColor = "error",
+  } = controller;
   const location = useLocation();
-  const collapseName = location.pathname.replace("/", "");
+  const collapseName = location.pathname;
+  const match = collapseName.match(/\/([^\/]+)\//);
+  const matchcollapseName = match?.[1].toLocaleLowerCase();
+  console.log("regex value", matchcollapseName);
 
   let textColor = "white";
 
@@ -84,13 +99,13 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           <SidenavCollapse
             name={name}
             icon={icon}
-            active={key === collapseName}
+            active={key === matchcollapseName}
             noCollapse={noCollapse}
           />
         </Link>
       ) : (
         <NavLink key={key} to={route}>
-          <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
+          <SidenavCollapse name={name} icon={icon} active={key === matchcollapseName} />
         </NavLink>
       );
     } else if (type === "title") {

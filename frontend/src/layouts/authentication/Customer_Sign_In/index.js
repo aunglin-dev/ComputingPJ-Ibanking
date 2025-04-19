@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // react-router-dom components
 import { Link } from "react-router-dom";
@@ -59,12 +59,14 @@ function Basic() {
       navigate("/dashboard");
       console.log(res.data);
       dispatch(loginSuccess(res.data));
-
-      dispatch(Adminlogout());
     }
 
     // Handle the response (e.g., login success/failure)
   };
+
+  useEffect(() => {
+    dispatch(Adminlogout());
+  }, []);
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
@@ -106,18 +108,7 @@ function Basic() {
                 onChange={(e) => setPassword(e.target.value)} // Update password state
               />
             </MDBox>
-            <MDBox display="flex" alignItems="center" ml={-1}>
-              <Switch checked={rememberMe} onChange={handleSetRememberMe} />
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                onClick={handleSetRememberMe}
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-              >
-                &nbsp;&nbsp;Remember u
-              </MDTypography>
-            </MDBox>
+
             <MDBox mt={4} mb={1}>
               <MDButton type="submit" variant="gradient" color="error" fullWidth>
                 Sign in

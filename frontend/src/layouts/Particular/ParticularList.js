@@ -77,7 +77,7 @@ function Particular() {
 
   //handle
   const handleEdit = async (Id) => {
-    navigate("/particular/Edit", {
+    navigate("/particularlist/Edit", {
       state: Id,
     });
   };

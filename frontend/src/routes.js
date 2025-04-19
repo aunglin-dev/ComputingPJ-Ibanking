@@ -2,6 +2,7 @@ import Dashboard from "layouts/dashboard";
 import Tables from "layouts/tables";
 import Billing from "layouts/billing";
 import RTL from "layouts/rtl";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
@@ -26,56 +27,23 @@ const routes = [
     name: "Dashboard",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/dashboard",
+    route: "/dashboard/",
     component: <Dashboard />,
   },
   {
     type: "collapse",
     name: "Customer Lists",
-    key: "tables",
+    key: "customerlist",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/CustomerList/Index",
     component: <Tables />,
   },
-  {
-    type: "title",
-    name: "EditCustomerSchemeCode ",
-    key: "EditCustomerSchemeCode",
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/CustomerList/Edit",
-    component: <EditCustomerSchemeCode />,
-  },
-  {
-    type: "collapse",
-    name: "Billing",
-    key: "billing",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/billing",
-    component: <Billing />,
-  },
-  {
-    type: "collapse",
-    name: "RTL",
-    key: "rtl",
-    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
-    route: "/rtl",
-    component: <RTL />,
-  },
-  {
-    type: "collapse",
-    name: "Notifications",
-    key: "notifications",
-    icon: <Icon fontSize="small">notifications</Icon>,
-    route: "/notifications",
-    component: <Notifications />,
-  },
-
   //Start Transaction Limit
   {
     type: "collapse",
     name: "TransactionLimit",
-    key: "TransactionLimit",
-    icon: <Icon fontSize="small">Transaction Limit</Icon>,
+    key: "transactionlimit",
+    icon: <Icon fontSize="small">credit_card_off</Icon>,
     route: "/transactionLimit/Create",
     component: <TransactionLimit />,
   },
@@ -84,11 +52,39 @@ const routes = [
   {
     type: "collapse",
     name: "SchemeCodeSetup",
-    key: "SchemeCodeSetup",
-    icon: <Icon fontSize="small">SchemeCode</Icon>,
+    key: "schemecode",
+    icon: <Icon fontSize="small">code</Icon>,
     route: "/schemeCode/Index",
     component: <SchemeCodeSetup />,
   },
+  //Start Particular
+
+  {
+    type: "collapse",
+    name: "ParticularList",
+    key: "particularlist",
+    icon: <Icon fontSize="small">attach_money</Icon>,
+    route: "/particularlist/Index",
+    component: <Particular />,
+  },
+  //End Transaction
+  {
+    type: "collapse",
+    name: "Profile",
+    key: "profile",
+    icon: <Icon fontSize="small">person</Icon>,
+    route: "/profile/",
+    component: <Profile />,
+  },
+  {
+    type: "title",
+    name: "EditCustomerSchemeCode ",
+    key: "CustomerList/Edit",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/CustomerList/Edit",
+    component: <EditCustomerSchemeCode />,
+  },
+
   {
     type: "title",
     name: "CreateSchemeCode",
@@ -113,46 +109,8 @@ const routes = [
     route: "/transactionLimit/Edit",
     component: <EditTransactionLimit />,
   },
-
-  //Start Particular
-
   {
     type: "divider",
-    name: "EditParticular",
-    key: "EditParticular",
-    icon: <Icon fontSize="small">Particular</Icon>,
-    route: "/particular/Edit",
-    component: <EditParticular />,
-  },
-
-  {
-    type: "collapse",
-    name: "ParticularList",
-    key: "ParticularList",
-    icon: <Icon fontSize="small">Particular</Icon>,
-    route: "/particular/Index",
-    component: <Particular />,
-  },
-
-  //End Transaction
-  {
-    type: "collapse",
-    name: "Profile",
-    key: "profile",
-    icon: <Icon fontSize="small">person</Icon>,
-    route: "/profile",
-    component: <Profile />,
-  },
-  {
-    type: "collapse",
-    name: "Sign In",
-    key: "Cus_sign-in",
-    icon: <Icon fontSize="small">login</Icon>,
-    route: "/authentication/Customer_Sign_In",
-    component: <CustomerSignIn />,
-  },
-  {
-    type: "collapse",
     name: "Sign In",
     key: "Auth_sign-in",
     icon: <Icon fontSize="small">login</Icon>,
@@ -161,6 +119,15 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "SignOut",
+    key: "LogOut",
+    icon: <Icon fontSize="small">login</Icon>,
+    route: "/authentication/Customer_Sign_In",
+    component: <CustomerSignIn />,
+  },
+
+  {
+    type: "title",
     name: "Sign In",
     key: "sign-in",
     icon: <Icon fontSize="small">login</Icon>,
@@ -168,12 +135,20 @@ const routes = [
     component: <FirstLogin />,
   },
   {
-    type: "collapse",
+    type: "title",
     name: "Sign Up",
     key: "sign-up",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/sign-up",
     component: <SignUp />,
+  },
+  {
+    type: "title",
+    name: "EditParticular",
+    key: "EditParticular",
+    icon: <Icon fontSize="small">Particular</Icon>,
+    route: "/particularlist/Edit",
+    component: <EditParticular />,
   },
 ];
 

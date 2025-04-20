@@ -15,6 +15,7 @@ import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import { useNavigate } from "react-router-dom";
+import MDSnackbar from "components/MDSnackbar";
 
 // Authentication layout components
 import BasicLayout from "layouts/authentication/components/BasicLayout";
@@ -23,6 +24,7 @@ import { loginStart, loginFailure, loginSuccess } from "./../../../Storage/custo
 import { Adminlogout } from "./../../../Storage/admin";
 import axios from "axios";
 import SignIn from "../sign-in/";
+
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
@@ -34,41 +36,85 @@ function Basic() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  //Message Box
+  const [successSB, setSuccessSB] = useState(false);
+  const [infoSB, setInfoSB] = useState(false);
+  const [warningSB, setWarningSB] = useState(false);
+  const [errorSB, setErrorSB] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const onSubmit = async (event) => {
-    event.preventDefault();
-    console.log("Email: ", email);
-    console.log("Password: ", password);
+    try {
+      event.preventDefault();
 
-    const res = await axios.post("/auth/signin  ", {
-      email: email,
-      password: password,
-    });
+      const res = await axios.post("/auth/signin", {
+        email: email,
+        password: password,
+      });
 
-    setEmail("");
-    setPassword("");
-    console.log(res);
-    if (res.status == 201 && res.data.isFirstLogin) {
-      //   dispatch(loginSuccess(res.data));
-      let userid = res.data.data.userId;
-      console.log(userid);
-      navigate("/authentication/first-login", { state: { userid } });
-    } else if (res.status == 200 && !res.data.IsFirstTimeLogin) {
-      dispatch(loginStart());
+      console.log("Still Correct");
 
-      window.alert("Welcome From SMEDB I-Banking System ");
-      navigate("/dashboard");
-      console.log(res.data);
-      dispatch(loginSuccess(res.data));
+      if (res.status === 200) {
+        if (res.data.isFirstLogin) {
+          let userid = res.data.data.userId;
+          navigate("/authentication/first-login", { state: { userid } });
+
+          console.log("_____________________", res);
+          console.log(userid);
+        } else {
+          window.alert("Welcome From SMEDB I-Banking System ");
+          navigate("/dashboard");
+          console.log(res.data);
+          dispatch(loginSuccess(res.data));
+        }
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error("Server responded with an error:", error.response.status);
+        if (error.response.status === 500) {
+          alert("Something went wrong on the server. Please try again later.");
+        } else if (error.response.status === 400) {
+          setErrorSB(true);
+          setErrorMessage(error.response.data.message);
+        }
+      } else if (error.request) {
+        console.error("No response received from the server:", error.request);
+        alert("Unable to connect to the server. Please check your internet connection.");
+      } else {
+        console.error("Error setting up the request:", error.message);
+        alert("An unexpected error occurred. Please try again.");
+      }
     }
-
-    // Handle the response (e.g., login success/failure)
   };
 
   useEffect(() => {
     dispatch(Adminlogout());
   }, []);
 
-  const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  // API return Message
+
+  const openSuccessSB = () => setSuccessSB(true);
+  const closeSuccessSB = () => setSuccessSB(false);
+  const openInfoSB = () => setInfoSB(true);
+  const closeInfoSB = () => setInfoSB(false);
+  const openWarningSB = () => setWarningSB(true);
+  const closeWarningSB = () => setWarningSB(false);
+  const openErrorSB = () => setErrorSB(true);
+  const closeErrorSB = () => setErrorSB(false);
+
+  const renderErrorSB = (
+    <MDSnackbar
+      color="error"
+      icon="warning"
+      title="User Sign In Fail!"
+      content={errorMessage}
+      dateTime="Just Now"
+      open={errorSB}
+      onClose={closeErrorSB}
+      close={closeErrorSB}
+      bgWhite
+    />
+  );
 
   return (
     <BasicLayout image={bgImage}>
@@ -113,6 +159,7 @@ function Basic() {
               <MDButton type="submit" variant="gradient" color="error" fullWidth>
                 Sign in
               </MDButton>
+              {renderErrorSB}
             </MDBox>
             <MDBox mt={1} textAlign="center">
               <MDTypography variant="button" color="text">

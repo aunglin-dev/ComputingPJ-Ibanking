@@ -60,13 +60,13 @@ export const Adminsignin = async (req, res, next) => {
     const user = await db.Admin.findOne({ where: { Email } });
 
     if (!user) {
-      return next(ErrorHandler(400, "Invalid Username or Password"));
+      return res.status(400).json({ message: "Invalid Username or Password" });
     }
 
     const passwordCorrect = await bcrypt.compare(Password, user.PasswordHash);
 
     if (!passwordCorrect) {
-      return next(ErrorHandler(400, "Invalid Username or Password"));
+      return res.status(400).json({ message: "Invalid Username or Password" });
     }
 
     // Create a token

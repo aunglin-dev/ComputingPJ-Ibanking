@@ -104,7 +104,7 @@ function Dashboard() {
                 color="primary"
                 icon="person_add"
                 title="Requested Users"
-                count="+91"
+                count="+5"
                 percentage={{
                   color: "success",
                   amount: "",
@@ -120,7 +120,7 @@ function Dashboard() {
                 color="info"
                 icon="group"
                 title="Current Users"
-                count="+91"
+                count="7"
                 percentage={{
                   color: "success",
                   amount: "",

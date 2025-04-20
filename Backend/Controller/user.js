@@ -79,6 +79,33 @@ export const signup = async (req, res, next) => {
   }
 };
 
+function isValidEmail(email) {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  if (!emailRegex.test(email)) return false;
+
+  return true;
+}
+
+function validateNRC(nrc) {
+  if (!nrc || typeof nrc !== "string") return false;
+
+  const nrcPattern = /^(\d{1,2})\/([A-Za-z]{1,6})\/(\d{6})$/;
+
+  // Test format
+  const match = nrc.match(nrcPattern);
+  if (!match) return false;
+
+  const [_, townshipCode, townshipName, numbers] = match;
+
+  //  Validate township code
+  const townshipNum = parseInt(townshipCode, 10);
+  if (townshipNum < 1 || townshipNum > 14) return false;
+
+  //  Validate numbers
+  return numbers.length === 6 && /^\d+$/.test(numbers);
+}
+
 export const requestUserAccount = async (req, res, next) => {
   try {
     // Destructure request body
@@ -113,11 +140,36 @@ export const requestUserAccount = async (req, res, next) => {
           where: { ProductName: productName },
         });
         if (!account) {
-          throw new Error(`Account type not found: ${productName}`);
+          return res
+            .status(400)
+            .json({ message: `Account type not found: ${productName}` });
         }
         return account;
       })
     );
+    //Validate NRC
+    if (!validateNRC(NRC)) {
+      return res.status(400).json({ message: "NRC Format is incorrect" });
+    }
+
+    //Check Duplicate Email and UserName
+    const [duplicatedEmail, duplicatedUsername] = await Promise.all([
+      db.User.findOne({
+        where: { Email: email },
+      }),
+      db.User.findOne({
+        where: { UserName: username },
+      }),
+    ]);
+
+    if (duplicatedEmail || duplicatedUsername) {
+      return res.status(400).json({ message: "Duplicated email or  UserName" });
+    }
+
+    //Validate Email
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ message: "Email Format Is wrong" });
+    }
 
     // Create a new user
     const newUser = await db.User.create({

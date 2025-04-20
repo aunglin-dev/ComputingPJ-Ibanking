@@ -14,19 +14,28 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { useForm, Controller } from "react-hook-form";
 
+import MDSnackbar from "components/MDSnackbar";
+
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
-import bgImage from "assets/images/bg-sign-up-cover.jpeg";
+import bgImage from "assets/images/Smedb.png";
 import axios from "axios";
 
 function Cover() {
   const [date, setDate] = useState("0001-01-01");
   const [selectedValues, setSelectedValues] = useState([]);
 
+  //Message Box
+  const [successSB, setSuccessSB] = useState(false);
+  const [infoSB, setInfoSB] = useState(false);
+  const [warningSB, setWarningSB] = useState(false);
+  const [errorSB, setErrorSB] = useState(false);
+
   const Gender = ["Male", "Female"];
   const [accounts, setAccounts] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
   //Fetch Accounts
   const fetchAccounts = async () => {
@@ -68,7 +77,8 @@ function Cover() {
       console.log(res);
       if (res.status == 201) {
         reset();
-        window.alert("Account Requested Success");
+        setSuccessSB(true);
+
         console.log(res.data);
       } else {
         reset();
@@ -80,6 +90,10 @@ function Cover() {
         if (error.response.status === 500) {
           alert("Something went wrong on the server. Please try again later.");
         }
+        if (error.response.status === 400) {
+          setErrorSB(true);
+          setErrorMessage(error.response.data.message);
+        }
       } else if (error.request) {
         console.error("No response received from the server:", error.request);
         alert("Unable to connect to the server. Please check your internet connection.");
@@ -90,12 +104,86 @@ function Cover() {
     }
   };
 
+  // API return Message
+
+  const openSuccessSB = () => setSuccessSB(true);
+  const closeSuccessSB = () => setSuccessSB(false);
+  const openInfoSB = () => setInfoSB(true);
+  const closeInfoSB = () => setInfoSB(false);
+  const openWarningSB = () => setWarningSB(true);
+  const closeWarningSB = () => setWarningSB(false);
+  const openErrorSB = () => setErrorSB(true);
+  const closeErrorSB = () => setErrorSB(false);
+
+  const alertContent = (name) => (
+    <MDTypography variant="body2" color="white">
+      A simple {name} alert with{" "}
+      <MDTypography component="a" href="#" variant="body2" fontWeight="medium" color="white">
+        an example link
+      </MDTypography>
+      . Give it a click if you like.
+    </MDTypography>
+  );
+
+  const renderSuccessSB = (
+    <MDSnackbar
+      color="success"
+      icon="check"
+      title="Self Registration Success"
+      content="Transaction Validated Successfully"
+      dateTime="Just Now"
+      open={successSB}
+      onClose={closeSuccessSB}
+      close={closeSuccessSB}
+      bgWhite
+    />
+  );
+
+  const renderInfoSB = (
+    <MDSnackbar
+      icon="notifications"
+      title="Material Dashboard"
+      content="Hello, world! This is a notification message"
+      dateTime="11 mins ago"
+      open={infoSB}
+      onClose={closeInfoSB}
+      close={closeInfoSB}
+    />
+  );
+
+  const renderWarningSB = (
+    <MDSnackbar
+      color="warning"
+      icon="star"
+      title="Material Dashboard"
+      content="Hello, world! This is a notification message"
+      dateTime="11 mins ago"
+      open={warningSB}
+      onClose={closeWarningSB}
+      close={closeWarningSB}
+      bgWhite
+    />
+  );
+
+  const renderErrorSB = (
+    <MDSnackbar
+      color="error"
+      icon="warning"
+      title="Self Registration Fail!"
+      content={errorMessage}
+      dateTime="Just Now"
+      open={errorSB}
+      onClose={closeErrorSB}
+      close={closeErrorSB}
+      bgWhite
+    />
+  );
   return (
-    <CoverLayout image={bgImage}>
+    <CoverLayout image={bgImage} minHeight={500}>
       <Card>
         <MDBox
           variant="gradient"
-          bgColor="info"
+          bgColor="error"
           borderRadius="lg"
           coloredShadow="success"
           mx={2}
@@ -388,6 +476,8 @@ function Cover() {
                   />
                 )}
               />
+              {renderSuccessSB}
+              {renderErrorSB}
             </MDBox>
 
             <MDBox display="flex" alignItems="center" ml={-1}>
@@ -431,7 +521,7 @@ function Cover() {
             </MDBox>
 
             <MDBox mt={4} mb={1}>
-              <MDButton type="submit" variant="gradient" color="info" fullWidth>
+              <MDButton type="submit" variant="gradient" color="error" fullWidth>
                 Request Account
               </MDButton>
             </MDBox>

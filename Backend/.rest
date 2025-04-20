@@ -17,7 +17,7 @@ Post http://localhost:8800/api/auth/signin
 Content-Type:application/json
 
 {
-  "email":"linoscar724@gmail.com",
+  "email":"aunglin2252003@gmail.com",
   "password": "Ace@12345"
 }
 

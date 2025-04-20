@@ -20,6 +20,7 @@ import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import { useNavigate } from "react-router-dom";
+import MDSnackbar from "components/MDSnackbar";
 
 // Authentication layout components
 import BasicLayout from "layouts/authentication/components/BasicLayout";
@@ -29,39 +30,128 @@ import { Customerlogout } from "./../../../Storage/customer";
 import axios from "axios";
 
 // Images
-import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import bgImage from "assets/images/images.jpg";
 
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
   const [email, setEmail] = useState(""); // State to store email
   const [password, setPassword] = useState(""); // State to store password
 
+  //Message Box
+  const [successSB, setSuccessSB] = useState(false);
+  const [infoSB, setInfoSB] = useState(false);
+  const [warningSB, setWarningSB] = useState(false);
+  const [errorSB, setErrorSB] = useState(false);
+
+  const Gender = ["Male", "Female"];
+  const [accounts, setAccounts] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const onSubmit = async (event) => {
-    event.preventDefault();
-    console.log("Email: ", email);
-    console.log("Password: ", password);
-    dispatch(loginStart());
-    const res = await axios.post("/admin/adminSigin", {
-      Email: email,
-      Password: password,
-    });
+    try {
+      event.preventDefault();
+      console.log("Email: ", email);
+      console.log("Password: ", password);
+      dispatch(loginStart());
+      const res = await axios.post("/admin/adminSigin", {
+        Email: email,
+        Password: password,
+      });
 
-    if (res.status == 200) {
-      window.alert("Welcome From SMEDB I-Banking System ");
-      console.log(res.data);
-      dispatch(loginSuccess(res.data));
+      if (res.status == 200) {
+        console.log(res.data);
+        dispatch(loginSuccess(res.data));
 
-      dispatch(Customerlogout());
-      navigate("/dashboard");
+        dispatch(Customerlogout());
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error("Server responded with an error:", error.response.status);
+        if (error.response.status === 500) {
+          alert("Something went wrong on the server. Please try again later.");
+        }
+        if (error.response.status === 400) {
+          setErrorSB(true);
+          setErrorMessage(error.response.data.message);
+        }
+      } else if (error.request) {
+        console.error("No response received from the server:", error.request);
+        alert("Unable to connect to the server. Please check your internet connection.");
+      } else {
+        console.error("Error setting up the request:", error.message);
+        alert("An unexpected error occurred. Please try again.");
+      }
     }
-
-    // Handle the response (e.g., login success/failure)
   };
 
-  const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  // API return Message
+
+  const openSuccessSB = () => setSuccessSB(true);
+  const closeSuccessSB = () => setSuccessSB(false);
+  const openInfoSB = () => setInfoSB(true);
+  const closeInfoSB = () => setInfoSB(false);
+  const openWarningSB = () => setWarningSB(true);
+  const closeWarningSB = () => setWarningSB(false);
+  const openErrorSB = () => setErrorSB(true);
+  const closeErrorSB = () => setErrorSB(false);
+
+  const renderSuccessSB = (
+    <MDSnackbar
+      color="success"
+      icon="check"
+      title="Admin Sign In Success"
+      content="Transaction Validated Successfully"
+      dateTime="Just Now"
+      open={successSB}
+      onClose={closeSuccessSB}
+      close={closeSuccessSB}
+      bgWhite
+    />
+  );
+
+  const renderInfoSB = (
+    <MDSnackbar
+      icon="notifications"
+      title="Material Dashboard"
+      content="Hello, world! This is a notification message"
+      dateTime="11 mins ago"
+      open={infoSB}
+      onClose={closeInfoSB}
+      close={closeInfoSB}
+    />
+  );
+
+  const renderWarningSB = (
+    <MDSnackbar
+      color="warning"
+      icon="star"
+      title="Material Dashboard"
+      content="Hello, world! This is a notification message"
+      dateTime="11 mins ago"
+      open={warningSB}
+      onClose={closeWarningSB}
+      close={closeWarningSB}
+      bgWhite
+    />
+  );
+
+  const renderErrorSB = (
+    <MDSnackbar
+      color="error"
+      icon="warning"
+      title="Admin Sign In Fail!"
+      content={errorMessage}
+      dateTime="Just Now"
+      open={errorSB}
+      onClose={closeErrorSB}
+      close={closeErrorSB}
+      bgWhite
+    />
+  );
 
   return (
     <BasicLayout image={bgImage}>
@@ -101,18 +191,7 @@ function Basic() {
                 onChange={(e) => setPassword(e.target.value)} // Update password state
               />
             </MDBox>
-            <MDBox display="flex" alignItems="center" ml={-1}>
-              <Switch checked={rememberMe} onChange={handleSetRememberMe} />
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                onClick={handleSetRememberMe}
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-              >
-                &nbsp;&nbsp;Remember u
-              </MDTypography>
-            </MDBox>
+
             <MDBox mt={4} mb={1}>
               <MDButton type="submit" variant="gradient" color="error" fullWidth>
                 Sign in
@@ -130,6 +209,8 @@ function Basic() {
                 >
                   Login in as Customer
                 </MDTypography>
+                {renderSuccessSB}
+                {renderErrorSB}
               </MDTypography>
             </MDBox>
             <MDBox mt={1} mb={1} textAlign="center">

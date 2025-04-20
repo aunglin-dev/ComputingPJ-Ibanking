@@ -13,13 +13,15 @@ import PageLayout from "examples/LayoutContainers/PageLayout";
 
 // Authentication layout components
 import Footer from "layouts/authentication/components/Footer";
+import { Height } from "@mui/icons-material";
+import { height } from "@mui/system";
 
 function CoverLayout({ coverHeight, image, children }) {
   return (
     <PageLayout>
       <MDBox
         width="calc(100% - 2rem)"
-        minHeight={coverHeight}
+        minHeight={100}
         borderRadius="xl"
         mx={2}
         my={2}
@@ -33,8 +35,9 @@ function CoverLayout({ coverHeight, image, children }) {
               rgba(gradients.dark.state, 0.4)
             )}, url(${image})`,
           backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          height: "100px",
+
+          backgroundSize: "contain",
         }}
       />
       <MDBox

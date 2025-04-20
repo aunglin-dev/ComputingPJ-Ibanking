@@ -180,7 +180,7 @@ function TransactionLimit() {
 
             {user.IsLoginLockUser != 1 ? (
               <LockIcon
-                onClick={() => handleApprove(user.UserId)}
+                onClick={() => handleApprove(user.UserId, 1)}
                 fontSize="medium"
                 sx={{ fontSize: "1.5rem", cursor: "pointer" }}
               />
@@ -363,8 +363,8 @@ function TransactionLimit() {
     <MDSnackbar
       color="success"
       icon="check"
-      title="Transaction Limit Saved"
-      content="Transaction Limit Saved Successfully"
+      title="User Updated  Succesfully"
+      content="Custer  has been approved "
       dateTime="Just Now"
       open={successSB}
       onClose={closeSuccessSB}

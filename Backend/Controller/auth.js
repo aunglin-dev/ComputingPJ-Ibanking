@@ -3,6 +3,7 @@ import User from "../Model/User.js";
 import { ErrorHandler } from "../Utils/error.js";
 import Jwt from "jsonwebtoken";
 import { db } from "../config.js";
+import { where } from "sequelize";
 
 //Registeration
 export const signup = async (req, res, next) => {
@@ -46,10 +47,16 @@ export const signin = async (req, res, next) => {
 
     console.log(passwordCorrect);
     if (!(user && passwordCorrect))
-      return next(ErrorHandler(400, "Invalid Username or Password"));
+      return res.status(400).json({ message: "Invalid Username or Password" });
 
+    console.log(
+      "Password Corrdct____________",
+      passwordCorrect,
+      user.IsFirstTimeLogin
+    );
     if (user != null && passwordCorrect && user.IsFirstTimeLogin) {
-      return res.status(201).json({
+      console.log("Correct");
+      return res.status(200).json({
         status: "success",
         message: "First-time login detected",
         isFirstLogin: true,
@@ -59,7 +66,19 @@ export const signin = async (req, res, next) => {
       });
     }
 
-    // console.log("Something is wrong");
+    const isLockUser = await db.User.findOne({
+      where: {
+        UserId: user.UserId,
+        IsLoginLockUser: 1,
+      },
+    });
+
+    if (isLockUser) {
+      return res.status(400).json({
+        message: "Your Account has been locked, Please Contact to bank",
+      });
+    }
+
     //Create a token
     const Usertoken = { name: user.UserName, id: user.UserId };
 
@@ -86,7 +105,11 @@ export const changePassword = async (req, res, next) => {
     // Password validation rules
     const minLength = 6;
     const maxLength = 10;
-    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/; // Regex to check for at least one special character
+    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+
+    const digitRegex = /[0-9]/;
+
+    const uppercaseRegex = /[A-Z]/;
 
     // Validate password length
     if (password.length < minLength || password.length > maxLength) {
@@ -102,6 +125,19 @@ export const changePassword = async (req, res, next) => {
       });
     }
 
+    // Validate digit
+    if (!digitRegex.test(password)) {
+      return res.status(400).json({
+        message: "Password must contain at least one digit.",
+      });
+    }
+
+    // Upper Case
+    if (!uppercaseRegex.test(password)) {
+      return res.status(400).json({
+        message: "Password must contain at least one Upper Case.",
+      });
+    }
     // Find the user
     const user = await db.User.findOne({ where: { userId } });
 

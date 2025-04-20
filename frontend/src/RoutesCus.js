@@ -264,6 +264,14 @@ const routes = [
     route: "/authentication/sign-in",
     component: <SignIn />,
   },
+  {
+    type: "title",
+    name: "Sign In",
+    key: "sign-in",
+    icon: <Icon fontSize="small">login</Icon>,
+    route: "/authentication/first-login",
+    component: <FirstLogin />,
+  },
 ];
 
 export default routes;

@@ -22,6 +22,8 @@ import { useDispatch } from "react-redux";
 import { loginStart, loginFailure, loginSuccess } from "./../../../Storage/admin";
 import axios from "axios";
 import SignIn from "../sign-in/";
+import MDSnackbar from "components/MDSnackbar";
+
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
@@ -36,6 +38,11 @@ function Basic() {
   const { userid } = location.state || {};
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  //Return Message
+
+  const [errorSB, setErrorSB] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const onSubmit = async (event) => {
     try {
@@ -62,7 +69,8 @@ function Basic() {
         if (error.response.status === 500) {
           alert("Something went wrong on the server. Please try again later.");
         } else if (error.response.status === 400) {
-          window.alert(error.response.data.message); // 400 Bad Request
+          setErrorSB(true);
+          setErrorMessage(error.response.data.message);
         }
       } else if (error.request) {
         console.error("No response received from the server:", error.request);
@@ -76,7 +84,21 @@ function Basic() {
     // Handle the response (e.g., login success/failure)
   };
 
-  const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  const closeErrorSB = () => setErrorSB(false);
+
+  const renderErrorSB = (
+    <MDSnackbar
+      color="error"
+      icon="warning"
+      title="Password Changed Fail!"
+      content={errorMessage}
+      dateTime="Just Now"
+      open={errorSB}
+      onClose={closeErrorSB}
+      close={closeErrorSB}
+      bgWhite
+    />
+  );
 
   return (
     <BasicLayout image={bgImage}>
@@ -107,7 +129,7 @@ function Basic() {
                 onChange={(e) => setPassword(e.target.value)} // Update password state
               />
             </MDBox>
-
+            {renderErrorSB}
             <MDBox mt={4} mb={1}>
               <MDButton type="submit" variant="gradient" color="error" fullWidth>
                 Confirm

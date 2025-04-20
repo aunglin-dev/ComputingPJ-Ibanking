@@ -55,17 +55,17 @@ function Basic() {
       console.log("Still Correct");
 
       if (res.status === 200) {
-        if (res.data.isFirstLogin) {
-          let userid = res.data.data.userId;
-          navigate("/authentication/first-login", { state: { userid } });
-
-          console.log("_____________________", res);
-          console.log(userid);
-        } else {
+        if (!res.data.isFirstLogin) {
           window.alert("Welcome From SMEDB I-Banking System ");
           navigate("/dashboard");
           console.log(res.data);
           dispatch(loginSuccess(res.data));
+        } else {
+          let userid = res?.data?.data?.userId;
+          navigate("/authentication/first-login", { state: { userid } });
+
+          console.log("_____________________", res);
+          console.log(userid);
         }
       }
     } catch (error) {

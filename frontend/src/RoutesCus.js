@@ -267,7 +267,7 @@ const routes = [
   {
     type: "title",
     name: "Sign In",
-    key: "sign-in",
+    key: "sign-in-Fist-Time",
     icon: <Icon fontSize="small">login</Icon>,
     route: "/authentication/first-login",
     component: <FirstLogin />,

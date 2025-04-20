@@ -15,11 +15,11 @@ import masterCardLogo from "assets/images/logos/mastercard.png";
 function MasterCard({ color, number, holder, expires }) {
   const numbers = [...`${number}`];
 
-  if (numbers.length < 15 || numbers.length > 15) {
-    throw new Error(
-      "Invalid value for the prop number, the value for the number prop shouldn't be greater than or less than 16 digits"
-    );
-  }
+  // if (numbers.length < 15 || numbers.length > 15) {
+  //   throw new Error(
+  //     "Invalid value for the prop number, the value for the number prop shouldn't be greater than or less than 16 digits"
+  //   );
+  // }
 
   const num1 = numbers.slice(0, 4).join("");
   const num2 = numbers.slice(4, 8).join("");

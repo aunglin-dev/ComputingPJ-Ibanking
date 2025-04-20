@@ -38,9 +38,16 @@ function OtherTransfer() {
   const [selectedValueForToAcc, setSelectedValueForToAcc] = useState("");
   const [description, setDescription] = useState(null);
   const [toaccountInfo, setToAccountInfo] = useState({});
-  const [toaccountInfoForDisplay, setToAccountInfoForDisplay] = useState({});
+  const [toaccountInfoForDisplay, setToAccountInfoForDisplay] = useState({
+    receiverName: null,
+    accountType: null,
+  });
   const [isFetchtoaccountInfo, setisFetchtoaccountInfo] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+
+  //Beneficiary
+  const [beneficiaryLists, setBeneficiaryList] = useState([]);
+  const [beneficiaryName, setBeneficiaryName] = useState(null);
 
   console.log("TransferOwn_________________", tranType?.TransferOwn);
 
@@ -58,6 +65,7 @@ function OtherTransfer() {
     setToAccountNoList(resFromAccountLsit.filter((el) => el != selectedValueForFromAcc));
   };
 
+  //Fetch To AccountInfo
   const fetchToAccountInfo = async (e) => {
     try {
       const inputValue = e.target.value;
@@ -71,6 +79,10 @@ function OtherTransfer() {
       console.log("selectedValueForToAcc___________________________________", numericValue);
 
       if (numericValue.length !== 15) {
+        setToAccountInfoForDisplay({
+          receiverName: null,
+          accountType: null,
+        });
         return;
       }
       const res = await axios.post("/transfer/fetchToAccNo", {
@@ -150,8 +162,79 @@ function OtherTransfer() {
     }
   };
 
+  //Fetch Beneficiary
+
+  const fetchAllBeneficiary = async () => {
+    try {
+      const res = await axios.post("/beneficiary/fetchAllBeneficiary", {
+        userId: currentCustomer?.UserId,
+      });
+
+      if (res.status == 200) {
+        setBeneficiaryList(res.data.data);
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error("Server responded with an error:", error.response.status);
+        if (error.response.status === 500) {
+          alert("Something went wrong on the server. Please try again later.");
+        }
+        if (error.response.status === 400) {
+          setErrorSB(true);
+          setErrorMessage(error.response.data.message);
+        }
+      } else if (error.request) {
+        console.error("No response received from the server:", error.request);
+        alert("Unable to connect to the server. Please check your internet connection.");
+      } else {
+        console.error("Error setting up the request:", error.message);
+        alert("An unexpected error occurred. Please try again.");
+      }
+    }
+  };
+
+  const fetchBeneficiaryInfo = async (value) => {
+    if (!value) return;
+    try {
+      setBeneficiaryName(value);
+      const res = await axios.post("/beneficiary/fetchOneBeneficiary", {
+        userId: currentCustomer?.UserId,
+        nickname: value,
+      });
+
+      if (res.status == 200) {
+        console.log(res.data);
+        setSelectedValueForToAcc(res.data.data.AccountNo);
+        setToAccountInfoForDisplay({
+          receiverName: res.data.data.AccountName,
+          accountType: res.data.data.AccountType,
+        });
+        console.log(toaccountInfo);
+        // setisFetchtoaccountInfo(false);
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error("Server responded with an error:", error.response.status);
+        if (error.response.status === 500) {
+          alert("Something went wrong on the server. Please try again later.");
+        }
+        if (error.response.status === 400) {
+          setErrorSB(true);
+          setErrorMessage(error.response.data.message);
+        }
+      } else if (error.request) {
+        console.error("No response received from the server:", error.request);
+        alert("Unable to connect to the server. Please check your internet connection.");
+      } else {
+        console.error("Error setting up the request:", error.message);
+        alert("An unexpected error occurred. Please try again.");
+      }
+    }
+  };
+
   useEffect(() => {
     fetchAccountNo();
+    fetchAllBeneficiary();
   }, [selectedValueForFromAcc]);
 
   const openSuccessSB = () => setSuccessSB(true);
@@ -265,9 +348,6 @@ function OtherTransfer() {
               <MDBox p={2}>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6} lg={6}>
-                    {/* <MDButton variant="gradient" color="success" onClick={openSuccessSB} fullWidth>
-                      success notification
-                    </MDButton> */}
                     <Autocomplete
                       value={selectedValueForFromAcc}
                       onChange={(event, newValue) => {
@@ -301,10 +381,43 @@ function OtherTransfer() {
                     )}
                     {renderSuccessSB}
                   </Grid>
+                  {/* Beneficary */}
                   <Grid item xs={12} sm={6} lg={6}>
-                    {/* <MDButton variant="gradient" color="info" onClick={openInfoSB} fullWidth>
-                      info notification
-                    </MDButton> */}
+                    <Autocomplete
+                      value={beneficiaryName}
+                      onChange={(event, newValue) => {
+                        if (newValue) {
+                          fetchBeneficiaryInfo(newValue);
+                        } else {
+                          setBeneficiaryName(null);
+                          setSelectedValueForToAcc("");
+                          setToAccountInfoForDisplay({ receiverName: null, accountType: null });
+                        }
+                      }}
+                      disabled={!beneficiaryLists.length > 0}
+                      freeSolo={false}
+                      options={
+                        beneficiaryLists.length > 0 && beneficiaryLists.map((el) => el.NickName)
+                      }
+                      isOptionEqualToValue={(option, value) => option === value}
+                      getOptionLabel={(option) => option || ""}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label={
+                            beneficiaryLists.length > 0
+                              ? "Select Beneficiary Name"
+                              : "You Have No Beneficary"
+                          }
+                          variant="outlined"
+                        />
+                      )}
+                    />
+
+                    {renderSuccessSB}
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} lg={6}>
                     <MDBox mb={2}>
                       <MDInput
                         mb={3}
@@ -313,6 +426,7 @@ function OtherTransfer() {
                         fullWidth
                         value={selectedValueForToAcc}
                         onChange={fetchToAccountInfo}
+                        disabled={beneficiaryName}
                         inputProps={{
                           maxLength: 15,
                           inputMode: "numeric",
@@ -353,7 +467,7 @@ function OtherTransfer() {
                         readOnly
                         value={toaccountInfoForDisplay.receiverName ?? "Receiver Name"}
                       />
-                      {Object.keys(toaccountInfoForDisplay).length > 0 && (
+                      {Object.values(toaccountInfoForDisplay).every((val) => val !== null) > 0 && (
                         <MDTypography
                           variant="caption"
                           fontWeight="medium"
@@ -366,10 +480,6 @@ function OtherTransfer() {
                             textShadow: "0px 1px 1px rgba(0,0,0,0.2)",
                           }}
                         >
-                          {/* {toaccountInfoForDisplay
-                            .filter((el) => el.AccountNo == selectedValueForFromAcc)
-                            .map((el) => el?.Balance)}{" "}
-                          MMK */}
                           Account Type : {toaccountInfoForDisplay?.accountType}
                         </MDTypography>
                       )}

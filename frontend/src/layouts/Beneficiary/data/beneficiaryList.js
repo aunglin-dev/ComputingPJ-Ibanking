@@ -134,7 +134,6 @@ export default function data() {
       //   { Header: "IsLockUser", accessor: "IsLoginLockUser", align: "center" },
       //   { Header: "Gender", accessor: "Gender", align: "center" },
       //   { Header: "No Of Account", accessor: "No Of Account", align: "center" },
-      { Header: "action", accessor: "action", align: "center" },
     ],
     rows,
   };

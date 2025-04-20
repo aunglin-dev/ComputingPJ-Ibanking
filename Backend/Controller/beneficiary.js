@@ -1,6 +1,7 @@
 import { where } from "sequelize";
 import { db, sequelize, Op } from "../config.js";
 import { tranType } from "../Utils/TranType.js";
+import AccountTypes from "../Model/AccountTypes.js";
 
 export const createBeneficiary = async (req, res) => {
   const transaction = await sequelize.transaction();
@@ -149,5 +150,119 @@ export const fetchAllBeneficiary = async (req, res) => {
   } catch (error) {
     console.error("Beneficiary", error);
     throw error;
+  }
+};
+
+// export const fetchOneBeneficiary = async (req, res) => {
+//   try {
+//     const { userId, nickname } = req.body;
+
+//     console.log(userId, nickname);
+//     console.log(userId, nickname);
+//     const allBeneficiary = await db.Beneficary.findOne({
+//       where: {
+//         UserId: userId,
+//         NickName: nickname,
+//         [Op.or]: [
+//           { IsDelete: 0 }, // Active records (0)
+//           { IsDelete: null }, // Records never deleted (NULL)
+//         ],
+//       },
+//     });
+
+//     console.log(allBeneficiary);
+
+//     if (!allBeneficiary) {
+//       return res.status(400).json({ message: "Provided Nickename Not Found" });
+//     }
+
+//     //Fetch Account Type
+//     const accountInfo = await db.CustomerAccount.findOne({
+//       where: {
+//         UserId: allBeneficiary.UserId,
+//         AccountNo: allBeneficiary.AccountNo,
+//       },
+//     });
+
+//     console.log(accountInfo);
+//     if (!accountInfo) {
+//       return res.status(400).json({ message: "Account Type Not Found" });
+//     }
+
+//     const accountType = await db.AccountTypes.findOne({
+//       where: {
+//         AccountId: accountInfo.AccountId,
+//       },
+//     });
+
+//     const returnBeneficiaryObj = {
+//       allBeneficiary,
+//       AccountType: accountType.ProductName,
+//     };
+
+//     res.status(200).json({
+//       message: "Beneficiary Retrieve successfully",
+//       data: returnBeneficiaryObj,
+//     });
+//   } catch (error) {
+//     console.error("Beneficiary", error);
+//     throw error;
+//   }
+// };
+
+export const fetchOneBeneficiary = async (req, res) => {
+  try {
+    const { userId, nickname } = req.body;
+
+    if (!userId || !nickname) {
+      return res
+        .status(400)
+        .json({ message: "User ID and Nickname are required." });
+    }
+
+    const allBeneficiary = await db.Beneficary.findOne({
+      where: {
+        UserId: userId,
+        NickName: nickname,
+        [Op.or]: [{ IsDelete: 0 }, { IsDelete: null }],
+      },
+    });
+
+    if (!allBeneficiary) {
+      return res.status(400).json({ message: "Provided Nickname Not Found" });
+    }
+
+    const accountInfo = await db.CustomerAccount.findOne({
+      where: {
+        AccountNo: allBeneficiary.AccountNo,
+      },
+    });
+
+    if (!accountInfo) {
+      return res.status(400).json({ message: "Account Info Not Found" });
+    }
+
+    const accountType = await db.AccountTypes.findOne({
+      where: {
+        AccountId: accountInfo.AccountId,
+      },
+    });
+
+    if (!accountType) {
+      return res.status(400).json({ message: "Account Type Not Found" });
+    }
+
+    const returnBeneficiaryObj = {
+      ...allBeneficiary.dataValues,
+      AccountType: accountType.ProductName,
+    };
+
+    return res.status(200).json({
+      message: "Beneficiary retrieved successfully",
+      data: returnBeneficiaryObj,
+    });
+  } catch (error) {
+    console.error("Error in fetchOneBeneficiary:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -136,7 +136,7 @@ function OtherTransfer() {
         setSuccessSB(true);
         const navigatedModel = res.data;
         console.log("NavigatedModel_____________", navigatedModel);
-        navigate("/transfer/validateotherTransfer", {
+        navigate("/transferother/validateotherTransfer", {
           state: { navigatedModel },
         });
       } else {
@@ -322,7 +322,7 @@ function OtherTransfer() {
     <MDSnackbar
       color="error"
       icon="warning"
-      title="Validate Own Transfer"
+      title="Validate Other Account Transfer"
       content={errorMessage}
       dateTime="Just Now"
       open={errorSB}

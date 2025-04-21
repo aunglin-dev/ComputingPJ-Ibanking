@@ -77,7 +77,9 @@ function ScheduleValidateOtherTransfer() {
           "navigatedConfirmedModel_________________________________",
           navigatedConfirmedModel
         );
-        navigate("/transfer/confirmScheduleOtherTransfer", { state: { navigatedConfirmedModel } });
+        navigate("/scheduletransfer/confirmScheduleOtherTransfer", {
+          state: { navigatedConfirmedModel },
+        });
         // window.alert("success");
       } else {
         window.alert("something is wrong");

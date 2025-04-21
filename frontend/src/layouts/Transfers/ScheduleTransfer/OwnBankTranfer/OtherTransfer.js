@@ -140,7 +140,7 @@ function ScheduleOtherTransfer() {
         setSuccessSB(true);
         const navigatedModel = res.data;
         console.log("NavigatedModel_____________", navigatedModel);
-        navigate("/transfer/validateScheduleTransfer", {
+        navigate("/scheduletransfer/validateScheduleTransfer", {
           state: { navigatedModel },
         });
       } else {
@@ -328,7 +328,7 @@ function ScheduleOtherTransfer() {
     <MDSnackbar
       color="error"
       icon="warning"
-      title="Validate Own Transfer"
+      title="Schedule Other Transfer"
       content={errorMessage}
       dateTime="Just Now"
       open={errorSB}

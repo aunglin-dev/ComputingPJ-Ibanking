@@ -132,7 +132,7 @@ function RemittanceTransfer() {
         setSuccessSB(true);
         const navigatedModel = res.data;
         console.log("NavigatedModel_____________", navigatedModel);
-        navigate("/transfer/remittancetransferValidate", {
+        navigate("/remittance/remittancetransferValidate", {
           state: { navigatedModel },
         });
       } else {
@@ -248,7 +248,7 @@ function RemittanceTransfer() {
     <MDSnackbar
       color="error"
       icon="warning"
-      title="Validate Other Bank Transfer"
+      title="Validate Remittance Transfer"
       content={errorMessage}
       dateTime="Just Now"
       open={errorSB}

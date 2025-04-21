@@ -245,6 +245,7 @@ function ValidateTransfer() {
                 <MDButton
                   type="button"
                   variant="gradient"
+                  onClick={() => navigate("/transfer/owntransfer")}
                   sx={{
                     mr: 2,
                     border: "2px solid",

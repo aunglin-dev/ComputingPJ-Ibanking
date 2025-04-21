@@ -6,6 +6,7 @@ import { useState, useEffect, use } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import MDSnackbar from "components/MDSnackbar";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 // Images
 import team2 from "assets/images/team-2.jpg";
@@ -75,25 +76,26 @@ export default function data() {
     }
   };
 
-  const rows = BeneficiaryList.map((user) => ({
-    action: (
-      <>
-        {/* {user.UserType !== "Registered" ? (
-          <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-            <Badge onClick={() => btnApprove(user.UserId)} disable={true}>
-              Approve
-            </Badge>
-          </MDTypography>
-        ) : (
-          <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-            <Badge onClick={() => btnLock(user.UserId)} disable={true}>
-              Lock
-            </Badge>
-          </MDTypography>
-        )} */}
-      </>
-    ),
+  //Delete Beneficiary
+  const handleApprove = async (id) => {
+    const confirmed = window.confirm("Please Confirm to delete this Beneficary?");
+    if (!confirmed) return;
 
+    console.log("Beneficary Id", id);
+    try {
+      const res = await axios.put("/beneficiary/deleteBeneficiary", {
+        id,
+      });
+      if (res.status == 200) {
+        window.alert("Successfully Deleted");
+      }
+    } catch (err) {
+      console.error("Deleted error:", err);
+      alert("Failed to Delete");
+    }
+  };
+
+  const rows = BeneficiaryList.map((user) => ({
     accountNo: (
       <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
         {user.AccountNo}
@@ -120,6 +122,15 @@ export default function data() {
         {user.Description}
       </MDTypography>
     ),
+    delete: (
+      <MDBox display="flex" alignItems="center" gap={1}>
+        <DeleteIcon
+          onClick={() => handleApprove(user.Id)}
+          fontSize="medium"
+          sx={{ fontSize: "1.5rem", cursor: "pointer" }}
+        />
+      </MDBox>
+    ),
   }));
 
   return {
@@ -130,6 +141,7 @@ export default function data() {
       { Header: "Nickname", accessor: "nickName", align: "center" },
 
       { Header: "RelationShip", accessor: "relationShip", align: "center" },
+      { Header: "Action", accessor: "delete", align: "left" },
       //   { Header: "Status", accessor: "employ", align: "center" },
       //   { Header: "IsLockUser", accessor: "IsLoginLockUser", align: "center" },
       //   { Header: "Gender", accessor: "Gender", align: "center" },

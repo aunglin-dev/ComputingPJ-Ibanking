@@ -69,7 +69,7 @@ function ValidateOtherTransfer() {
           "navigatedConfirmedModel_________________________________",
           navigatedConfirmedModel
         );
-        navigate("/transfer/confirmTransferother", { state: { navigatedConfirmedModel } });
+        navigate("/transferother/confirmTransferother", { state: { navigatedConfirmedModel } });
         // window.alert("success");
       } else {
         window.alert("something is wrong");

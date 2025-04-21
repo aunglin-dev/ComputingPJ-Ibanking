@@ -41,12 +41,10 @@ export const validateScheduleTransfer = async (req, res) => {
       db.CustomerAccount.findOne({
         where: { AccountNo: fromAccountNo, UserId: userId },
         transaction,
-        // lock: true,
       }),
       db.CustomerAccount.findOne({
         where: { AccountNo: toAccountNo },
         transaction,
-        // lock: true,
       }),
     ]);
 
@@ -69,8 +67,10 @@ export const validateScheduleTransfer = async (req, res) => {
       }),
     ]);
 
+    console.log(reqtranType);
     //  Validation For Other Account
-    if (reqtranType == tranType?.ScheduleTransferOtherAccount) {
+    if (reqtranType == tranType.ScheduleTransferOther) {
+      console.log(fromAccount.UserId, toAccountNo.UserId);
       if (fromAccount?.UserId == toAccount?.UserId) {
         await transaction.rollback();
         return res

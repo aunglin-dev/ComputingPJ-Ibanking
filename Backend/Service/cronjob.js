@@ -3,7 +3,10 @@ import { db, sequelize } from "../config.js";
 import { tranType } from "../Utils/TranType.js";
 import { TRANSACTION_STATUS } from "../Utils/TransactionStatus.js";
 import emailtransporter from "./emailservice.js";
-import scheduledTransferEmail from "../Utils/emailtemplate.js";
+import {
+  scheduledTransferEmail,
+  scheduledTransferEmailForOtherBank,
+} from "../Utils/emailtemplate.js";
 
 const ERROR_MESSAGES = {
   ACCOUNT_NOT_FOUND: "One or both accounts not found",
@@ -16,10 +19,16 @@ const SendEmail = async (scheduleItem, userInfoForEmail) => {
   if (!emailtransporter) {
     throw new Error("Email transporter not initialized");
   }
-  const scheduleEmailTemplate = scheduledTransferEmail(
-    scheduleItem,
-    userInfoForEmail
-  );
+  let scheduleEmailTemplate;
+
+  if (scheduleItem.TranType === tranType.ScheduleTransferOther) {
+    scheduleEmailTemplate = scheduledTransferEmail(
+      scheduleItem,
+      userInfoForEmail
+    );
+  } else {
+    scheduleEmailTemplate = scheduledTransferEmailForOtherBank(scheduleItem);
+  }
 
   // Email options
   const mailOptions = {
@@ -137,7 +146,14 @@ const processScheduledTransfers = async (schedules, transaction) => {
         );
         successfulTransfers.push({ scheduleItem, userInfoForEmail: emailUser });
       } else {
-        await performOtherBankTransfer(scheduleItem, transaction);
+        const emailUserOtherBank = await performOtherBankTransfer(
+          scheduleItem,
+          transaction
+        );
+        successfulTransfers.push({
+          scheduleItem,
+          userInfoForEmail: emailUserOtherBank,
+        });
       }
     } catch (error) {
       console.error(

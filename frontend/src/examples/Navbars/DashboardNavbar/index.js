@@ -48,6 +48,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
   const { currentAdmin } = useSelector((state) => state.admin);
+  const { currentCustomer } = useSelector((state) => state.customer);
 
   useEffect(() => {
     // Setting the navbar type
@@ -127,7 +128,11 @@ function DashboardNavbar({ absolute, light, isMini }) {
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox pr={4} lineHeight={2} display="flex" flexDirection="column">
               <MDTypography variant="button" color="text" fontWeight="regular" align="left">
-                Welcome: {currentAdmin == undefined ? "smth" : currentAdmin?.FullName}
+                {currentCustomer ? (
+                  <>Welcome: {currentCustomer?.FullName || "smth"}</>
+                ) : (
+                  <>Welcome: {currentAdmin?.FullName || "smth"}</>
+                )}
               </MDTypography>
 
               <MDTypography variant="button" color="text" fontWeight="regular" align="center">

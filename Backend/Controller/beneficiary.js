@@ -153,63 +153,6 @@ export const fetchAllBeneficiary = async (req, res) => {
   }
 };
 
-// export const fetchOneBeneficiary = async (req, res) => {
-//   try {
-//     const { userId, nickname } = req.body;
-
-//     console.log(userId, nickname);
-//     console.log(userId, nickname);
-//     const allBeneficiary = await db.Beneficary.findOne({
-//       where: {
-//         UserId: userId,
-//         NickName: nickname,
-//         [Op.or]: [
-//           { IsDelete: 0 }, // Active records (0)
-//           { IsDelete: null }, // Records never deleted (NULL)
-//         ],
-//       },
-//     });
-
-//     console.log(allBeneficiary);
-
-//     if (!allBeneficiary) {
-//       return res.status(400).json({ message: "Provided Nickename Not Found" });
-//     }
-
-//     //Fetch Account Type
-//     const accountInfo = await db.CustomerAccount.findOne({
-//       where: {
-//         UserId: allBeneficiary.UserId,
-//         AccountNo: allBeneficiary.AccountNo,
-//       },
-//     });
-
-//     console.log(accountInfo);
-//     if (!accountInfo) {
-//       return res.status(400).json({ message: "Account Type Not Found" });
-//     }
-
-//     const accountType = await db.AccountTypes.findOne({
-//       where: {
-//         AccountId: accountInfo.AccountId,
-//       },
-//     });
-
-//     const returnBeneficiaryObj = {
-//       allBeneficiary,
-//       AccountType: accountType.ProductName,
-//     };
-
-//     res.status(200).json({
-//       message: "Beneficiary Retrieve successfully",
-//       data: returnBeneficiaryObj,
-//     });
-//   } catch (error) {
-//     console.error("Beneficiary", error);
-//     throw error;
-//   }
-// };
-
 export const fetchOneBeneficiary = async (req, res) => {
   try {
     const { userId, nickname } = req.body;
@@ -264,5 +207,28 @@ export const fetchOneBeneficiary = async (req, res) => {
   } catch (error) {
     console.error("Error in fetchOneBeneficiary:", error);
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const deleteBeneficiary = async (req, res) => {
+  try {
+    const { id } = req.body;
+    // Soft delete
+    const result = await db.Beneficary.update(
+      { IsDelete: 1 },
+      { where: { Id: id } }
+    );
+
+    if (result === 0) {
+      return res.status(404).json({ message: "Beneficary Not Found" });
+    }
+
+    res.status(200).json({
+      message: "Beneficiary Deleted successfully",
+      data: result,
+    });
+  } catch (error) {
+    console.error("Beneficiary", error);
+    throw error;
   }
 };

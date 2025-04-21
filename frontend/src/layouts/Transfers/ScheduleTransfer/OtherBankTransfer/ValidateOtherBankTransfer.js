@@ -88,7 +88,7 @@ function ScheduleValidateOtherBankTransfer() {
           "navigatedConfirmedModel_________________________________",
           navigatedConfirmedModel
         );
-        navigate("/transfer/scheduleOtherBankTransferConfirm", {
+        navigate("/scheduletransferother/scheduleOtherBankTransferConfirm", {
           state: { navigatedConfirmedModel },
         });
         // window.alert("success");

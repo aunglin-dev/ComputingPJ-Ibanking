@@ -170,7 +170,7 @@ function ScheduleOtherBankTransfer() {
         setSuccessSB(true);
         const navigatedModel = res.data;
         console.log("NavigatedModel_____________", navigatedModel);
-        navigate("/transfer/ScheduleOtherBankTransferValidate", {
+        navigate("/scheduletransferother/ScheduleOtherBankTransferValidate", {
           state: { navigatedModel },
         });
       } else {

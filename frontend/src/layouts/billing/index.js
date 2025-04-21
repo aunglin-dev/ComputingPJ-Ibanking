@@ -91,7 +91,7 @@ function Billing() {
                 <Grid item xs={12} xl={6}>
                   <MasterCard
                     number={currentAccount?.accountNo}
-                    holder={currentCustomer?.FullName}
+                    holder={currentCustomer?.UserName}
                     expires="11/22"
                   />
                 </Grid>

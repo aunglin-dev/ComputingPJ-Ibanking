@@ -334,7 +334,10 @@ export const confirmOtherBankTransfer = async (req, res) => {
         ToBranch: OtherBranchId,
         Phone: phone,
         Email: email,
-        Status: "Success",
+        Status:
+          reqtranType == tranType.ScheduleTransferOtherBank
+            ? "Pending"
+            : "Success",
         TranType: reqtranType,
         TransactionDate: insertedTransactionDate,
       },

@@ -245,7 +245,7 @@ function OwnBankBeneficiary() {
     <MDSnackbar
       color="error"
       icon="warning"
-      title="Validate Own Transfer"
+      title=" Adding New Beneficiary"
       content={errorMessage}
       dateTime="Just Now"
       open={errorSB}
@@ -317,10 +317,10 @@ function OwnBankBeneficiary() {
                     <MDBox mb={2}>
                       <MDInput
                         type="text"
-                        placeholder="Receiver Name"
+                        placeholder="Account Holder Name"
                         fullWidth
                         readOnly
-                        value={toaccountInfoForDisplay.receiverName ?? "Receiver Name"}
+                        value={toaccountInfoForDisplay.receiverName ?? "Account Holder Name"}
                       />
                       {Object.keys(toaccountInfoForDisplay).length > 0 && (
                         <MDTypography

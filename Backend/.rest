@@ -286,6 +286,15 @@ Content-Type:application/json
   "nickname": "dfddfddsfdsf"
 }
 
+#######
+
+PUT    http://localhost:8800/api/beneficiary/deleteBeneficiary
+Content-Type:application/json
+
+{
+"id": 8
+}
+
 #####
 
 POST http://localhost:8800/api/beneficiary/createBeneficiary

@@ -161,7 +161,7 @@ function OtherBankTransfer() {
         setSuccessSB(true);
         const navigatedModel = res.data;
         console.log("NavigatedModel_____________", navigatedModel);
-        navigate("/transfer/validateotherBankTransfer", {
+        navigate("/transferotherbank/validateotherBankTransfer", {
           state: { navigatedModel },
         });
       } else {

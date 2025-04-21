@@ -86,7 +86,9 @@ function ValidateOtherBankTransfer() {
           "navigatedConfirmedModel_________________________________",
           navigatedConfirmedModel
         );
-        navigate("/transfer/confirmotherBankTransfer", { state: { navigatedConfirmedModel } });
+        navigate("/transferotherbank/confirmotherBankTransfer", {
+          state: { navigatedConfirmedModel },
+        });
         // window.alert("success");
       } else {
         window.alert("something is wrong");

@@ -87,7 +87,7 @@ function ValidateRemittanceTransfer() {
           "navigatedConfirmedModel_________________________________",
           navigatedConfirmedModel
         );
-        navigate("/transfer/remittancetransferConfirm", {
+        navigate("/remittance/remittancetransferConfirm", {
           state: { navigatedConfirmedModel },
         });
         // window.alert("success");

@@ -1,5 +1,5 @@
 import { where } from "sequelize";
-import { db, sequelize } from "../config.js";
+import { db, sequelize, Op } from "../config.js";
 import { tranType } from "../Utils/TranType.js";
 
 export const fetchToAccNo = async (req, res) => {
@@ -105,6 +105,54 @@ export const validateTransfer = async (req, res) => {
       }),
     ]);
 
+    //Retrieve Scheme Code to check transaction limit
+
+    if (sender.SchemeCode) {
+      const schemeCodeList = await db.SchemeCode.findOne({
+        where: {
+          SchemeCode: sender.SchemeCode,
+          AccountId: fromAccount.AccountId,
+        },
+        transaction,
+      });
+
+      if (schemeCodeList?.LimitCodeId) {
+        console.log(schemeCodeList?.LimitCodeId);
+        const transactionLimit = await db.TransactionLimit.findOne({
+          where: {
+            Id: schemeCodeList?.LimitCodeId,
+            [Op.or]: [{ IsDelete: 0 }, { IsDelete: null }],
+          },
+          transaction,
+        });
+
+        console.log("Transaction limit", transactionLimit);
+        if (
+          transactionLimit &&
+          (amount < transactionLimit.MinTransactionAmount ||
+            amount > transactionLimit.MaxTransactionAmount)
+        ) {
+          await transaction.rollback();
+          return res.status(400).json({
+            message: `Your balance is not betwen transaction limit ${transactionLimit.MinTransactionAmount} and ${transactionLimit.MaxTransactionAmount}`,
+          });
+        }
+      }
+    }
+
+    //Retrieve Service Fee
+    const particular = await db.Particular.findOne({
+      where: {
+        TranType: reqtranType,
+      },
+      transaction,
+    });
+
+    let transactionFee;
+    if (particular) {
+      transactionFee = (particular.ChargesRate / 100) * amount;
+    }
+
     //  Validation For Other Account
     if (reqtranType == tranType?.TransferOther) {
       if (fromAccount?.UserId == toAccount?.UserId) {
@@ -129,6 +177,7 @@ export const validateTransfer = async (req, res) => {
       toAccountNo,
       amount,
       description,
+      transactionFee,
       senderName: sender.FullName,
       receiverName: receiver.FullName,
       transactionDate: new Date().toLocaleString("en-US", {
@@ -165,6 +214,7 @@ export const confirmTransfer = async (req, res) => {
       amount,
       description,
       reqtranType,
+      transactionFee,
     } = req.body;
 
     // Validate input
@@ -240,6 +290,31 @@ export const confirmTransfer = async (req, res) => {
       ),
     ]);
 
+    //Retrieve Service Fee and take balance for office account
+    console.log(transactionFee);
+    if (transactionFee) {
+      // Fetch particular by TranType
+      const particular = await db.Particular.findOne({
+        where: { TranType: reqtranType },
+        transaction,
+      });
+
+      console.log(particular);
+      if (particular?.OfficeAccountId) {
+        // Update the Office Account Balance
+
+        console.log("Update______________");
+        await db.OfficeAccounts.increment(
+          { Balance: Number(transactionFee) },
+          {
+            where: { Id: particular.OfficeAccountId },
+            transaction,
+            logging: console.log,
+          }
+        );
+      }
+    }
+
     // Create transaction log
     const newTransaction = await db.TransferLog.create(
       {
@@ -253,6 +328,7 @@ export const confirmTransfer = async (req, res) => {
         Currency: "MMK",
         Status: "Success",
         TranType: reqtranType,
+        TotalCharges: transactionFee ?? 0,
         TransactionDate: new Date(),
       },
       { transaction }
@@ -271,6 +347,7 @@ export const confirmTransfer = async (req, res) => {
       ToAccountName: newTransaction.ToAccountName,
       Currency: newTransaction.Currency,
       senderName: sender.FullName,
+      TransactionFee: newTransaction.TotalCharges,
       TranType: newTransaction.TranType,
       TransactionDate: newTransaction.newTransaction,
     };

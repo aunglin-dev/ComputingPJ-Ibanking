@@ -23,10 +23,12 @@ import axios from "axios";
 import { string } from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { tranType } from "../../../helper/TransferType";
 
 function ValidateTransfer() {
   const { state } = useLocation();
-  const { amount, description, fromAccountNo, senderName, toAccountNo } = state?.navigatedModel; //
+  const { amount, description, fromAccountNo, senderName, toAccountNo, transactionFee } =
+    state?.navigatedModel; //
 
   //Might Delete Later
   const [successSB, setSuccessSB] = useState(false);
@@ -53,7 +55,8 @@ function ValidateTransfer() {
         toAccountNo: toAccountNo,
         amount: amount,
         description: description,
-        tranType: "TransferOwnerAccount",
+        transactionFee: transactionFee,
+        reqtranType: tranType.TransferOwn,
       };
       console.log(validateModel);
       const res = await axios.post("/transfer/confirmTransfer", validateModel);
@@ -218,7 +221,7 @@ function ValidateTransfer() {
                     </MDTypography>
                     <br />
                     <MDTypography component="a" href="#" variant="body2">
-                      0.00
+                      {transactionFee}
                     </MDTypography>
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6}>

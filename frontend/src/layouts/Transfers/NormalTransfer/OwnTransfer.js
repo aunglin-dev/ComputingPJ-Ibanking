@@ -22,6 +22,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import axios from "axios";
 import { string } from "prop-types";
 import { useNavigate } from "react-router-dom";
+import { tranType } from "../../../helper/TransferType";
 
 function OwnTransfer() {
   const [successSB, setSuccessSB] = useState(false);
@@ -62,6 +63,7 @@ function OwnTransfer() {
         toAccountNo: selectedValueForToAcc,
         amount: rawValue,
         description: description,
+        reqtranType: tranType.TransferOwn,
       };
       console.log(validateModel);
       const res = await axios.post("/transfer/validateAllTransfer", validateModel);

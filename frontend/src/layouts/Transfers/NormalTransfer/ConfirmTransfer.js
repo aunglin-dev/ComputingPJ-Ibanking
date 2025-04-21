@@ -26,8 +26,15 @@ import { useLocation } from "react-router-dom";
 
 function ConfirmTransfer() {
   const { state } = useLocation();
-  const { FromAccount, ToAccount, TransactionId, TransactionAmount, Description, senderName } =
-    state?.navigatedConfirmedModel; //
+  const {
+    FromAccount,
+    ToAccount,
+    TransactionId,
+    TransactionAmount,
+    Description,
+    senderName,
+    TransactionFee,
+  } = state?.navigatedConfirmedModel; //
 
   console.log("TransactionAmount", TransactionAmount);
 
@@ -216,7 +223,9 @@ function ConfirmTransfer() {
                     </MDTypography>
                     <br />
                     <MDTypography component="a" href="#" variant="body2">
-                      0.00
+                      {String(TransactionFee)
+                        ?.replace(/\D/g, "")
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     </MDTypography>
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6}>

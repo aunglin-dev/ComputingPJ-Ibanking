@@ -150,10 +150,11 @@ POST  http://localhost:8800/api/transfer/validateAllTransfer
 Content-Type:application/json
 
 {
-
-"fromAccountNo" : "100005247913660",
+"userId": 10020,
+"fromAccountNo" : "100003683406420",
  "toAccountNo" : "100005872770075",
-  "amount" : 100.0,
+  "amount" : 300.0,
+  "reqtranType" : "TransferOwnAccount",
    "descrption" : "blah blah "
 
 
@@ -244,32 +245,55 @@ POST  http://localhost:8800/api/transfer/confirmTransfer
 Content-Type:application/json
 
 {
-   "userId" : 9 ,
-    "fromAccountNo": "100005247913660",
-    "toAccountNo" : "100001140112293",
+   "userId" : 10020 ,
+    "fromAccountNo": "100003683406420",
+    "toAccountNo" : "100003836575979",
     "amount" :"1000.00",
     "descrption": "blah blah",
-    "transactionDate":"03/25/2025",
-    "tranType": "TransferOwnerAccount"
+    "transactionFee": 100,
+    "reqtranType": "TransferOwnAccount"
 
 }
 
 
 #######
 
-POST  http://localhost:8800/api/transfer/confirmScheduleTransfer
+POST  http://localhost:8800/api/transfer/confirmTransfer
 Content-Type:application/json
 
 {
-   "userId" : 9 ,
-    "fromAccountNo": "100005247913660",
-    "toAccountNo" : "100001140112293",
-    "amount" :"1000.00",
+   "userId" : 10020 ,
+    "fromAccountNo": "100003683406420",
+    "toAccountNo" : "100003836575979",
+    "amount" :"20000.00",
     "descrption": "blah blah",
-    "transactionDate":"04/16/2025",
-    "reqtranType": "ScheduleTransferOtherAccount"
+    "transactionFee": 100,
+    "reqtranType": "TransferOwnAccount"
 
 }
+
+
+amount
+: 
+"20000"
+description
+: 
+"Test"
+fromAccountNo
+: 
+"100003683406420"
+toAccountNo
+: 
+"100003836575979"
+tranType
+: 
+"TransferOwnAccount"
+transactionFee
+: 
+100
+userId
+: 
+"10020"
 
 
 #######

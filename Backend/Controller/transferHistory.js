@@ -3,7 +3,10 @@ import { db, sequelize, Op } from "../config.js";
 
 export const fetchAllTransactionHistory = async (req, res) => {
   try {
-    const { fromDate, toDate, trantype } = req.body;
+    let { fromDate, toDate, trantype } = req.body;
+
+    fromDate = fromDate ?? Date.now();
+    toDate = toDate ?? Date.now();
 
     console.log(fromDate, toDate);
     const whereClause = {

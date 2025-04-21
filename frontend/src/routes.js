@@ -17,6 +17,7 @@ import EditSchemeCode from "layouts/SchemeCodeSetUp/EditSchemeCode";
 import Particular from "layouts/Particular/ParticularList";
 import EditParticular from "layouts/Particular/EditParticular";
 import EditCustomerSchemeCode from "layouts/tables/EditCustomerSchemeCode";
+import TranHistory from "layouts/TransactionHistory/TranHistoryList";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -66,6 +67,15 @@ const routes = [
     icon: <Icon fontSize="small">attach_money</Icon>,
     route: "/particularlist/Index",
     component: <Particular />,
+  },
+
+  {
+    type: "collapse",
+    name: "Transaction History",
+    key: "tranhistory",
+    icon: <Icon fontSize="small">attach_money</Icon>,
+    route: "/tranhistory/Index",
+    component: <TranHistory />,
   },
   //End Transaction
   {

@@ -195,6 +195,17 @@ Content-Type:application/json
 
 }
 
+#######
+
+POST  http://localhost:8800/api/tranHistory/fetchTranHistorys
+Content-Type:application/json
+
+{
+  "fromDate" : "2025-03-21",
+   "toDate" : "2025-04-21",
+   "trantype" : "TransferOwnerAccount"
+}
+
 
 #######
 

@@ -15,6 +15,7 @@ import cronjob from "./Service/cronjob.js";
 import schemeCodeRouter from "./Routes/schemeCode.js";
 import particularRouter from "./Routes/particular.js";
 import DashboardRouter from "./Routes/dashboard.js";
+import transactionHistoryRouter from "./Routes/transactionHistory.js";
 
 const app = express();
 const port = 8800;
@@ -44,6 +45,7 @@ app.use("/api/translimit", transactionLimitRouter);
 app.use("/api/schemeCode", schemeCodeRouter);
 app.use("/api/particular", particularRouter);
 app.use("/api/dashboard", DashboardRouter);
+app.use("/api/tranHistory", transactionHistoryRouter);
 
 app.use((err, req, res, next) => {
   const status = err.status || 500;

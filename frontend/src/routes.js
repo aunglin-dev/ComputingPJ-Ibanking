@@ -73,7 +73,7 @@ const routes = [
     type: "collapse",
     name: "Transaction History",
     key: "tranhistory",
-    icon: <Icon fontSize="small">attach_money</Icon>,
+    icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/tranhistory/Index",
     component: <TranHistory />,
   },

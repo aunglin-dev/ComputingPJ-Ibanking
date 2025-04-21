@@ -206,6 +206,17 @@ Content-Type:application/json
    "trantype" : "TransferOwnerAccount"
 }
 
+#######
+
+POST  http://localhost:8800/api/tranHistory/exportCSV
+Content-Type:application/json
+
+{
+  "fromDate" : "2025-03-22",
+   "toDate" : "2025-04-22",
+   "trantype" : "RemittanceTransfer"
+}
+
 
 #######
 

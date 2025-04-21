@@ -118,6 +118,38 @@ function TranHistory() {
     }
   };
 
+  //Export CSV
+  const exportCSV = async () => {
+    try {
+      const res = await axios.post(
+        "/tranHistory/exportCSV",
+        {
+          fromDate,
+          toDate,
+          trantype: tranType,
+        },
+        {
+          responseType: "blob",
+        }
+      );
+
+      console.log("Export Value_____________", res);
+
+      const blob = new Blob([res.data], { type: "text/csv;charset=utf-8;" });
+      const downloadUrl = window.URL.createObjectURL(blob);
+
+      // Create an invisible link and trigger click immediately
+      const a = document.createElement("a");
+      a.href = downloadUrl;
+      a.download = "Transaction_History.csv"; //
+      document.body.appendChild(a);
+      a.click();
+      a.remove(); // clean up
+    } catch (err) {
+      console.error("Error exporting CSV:", err);
+    }
+  };
+
   useEffect(() => {
     fetchAllTransactionHistory();
   }, [fromDate, toDate, tranType]);
@@ -296,6 +328,24 @@ function TranHistory() {
                 showTotalEntries={true}
                 noEndBorder
               />
+            </MDBox>
+
+            <MDBox mt={1} mb={1} mr={2} display="flex" justifyContent="flex-end">
+              <MDButton
+                type="submit"
+                variant="gradient"
+                color="error"
+                small
+                onClick={exportCSV}
+                sx={{
+                  padding: "5px 15px",
+                  fontSize: "0.7rem",
+                  minHeight: "32px",
+                  lineHeight: "1.5",
+                }}
+              >
+                Export CSV
+              </MDButton>
             </MDBox>
           </Card>
         </Grid>

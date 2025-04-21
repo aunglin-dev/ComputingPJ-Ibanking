@@ -295,24 +295,23 @@ function TranHistory() {
                       //   inputProps={{ min: formattedTomorrow }}
                     />
                   </MDBox>
-                  <Grid item xs={12} sm={6} lg={6} mt={2}>
+                  <Grid item xs={12} sm={6} lg={12} mt={2}>
                     <Autocomplete
+                      fullWidth
+                      sx={{ width: "250px" }}
                       value={tranType}
-                      //   isOptionEqualToValue={(option, value) => option.value === value.value}
-                      //   onChange={(event, newValue) => {
-                      //     setCurrency(newValue);
-
-                      //     console.log(newValue);
-                      //   }}
                       onChange={(event, newValue) => setTranType(newValue)}
                       options={transList}
-                      getOptionLabel={(option) => option || ""} // Handle null/undefined
+                      getOptionLabel={(option) => option || ""}
                       renderInput={(params) => (
-                        <TextField {...params} label="Select Transaction Type" variant="outlined" />
+                        <TextField
+                          {...params}
+                          label="Select Transaction Type"
+                          variant="outlined"
+                          fullWidth // ensures the input expands
+                        />
                       )}
                     />
-
-                    {renderSuccessSB}
                   </Grid>
                 </MDBox>
               </Grid>

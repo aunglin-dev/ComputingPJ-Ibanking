@@ -54,7 +54,7 @@ function TransactionLimit() {
     { Header: "Limit Code", accessor: "limitCode", align: "left" },
     { Header: "Limit Type", accessor: "type", align: "left" },
     { Header: "Currency", accessor: "currency", align: "center" },
-    { Header: "Charges Rate", accessor: "rate", align: "center" },
+
     { Header: "Minimum Transaction Amount", accessor: "MinTraxAmt", align: "center" },
     { Header: "Maximum Transaction Amount", accessor: "MaxTraxAmt", align: "center" },
     { Header: "Limit Code Description", accessor: "LimitCodeDesc", align: "center" },
@@ -74,7 +74,6 @@ function TransactionLimit() {
         limitCode: el.LimitCode,
         type: el.LimitType,
         currency: el.Currency,
-        rate: el.Rate,
         MinTraxAmt: el.MinTransactionAmount,
         MaxTraxAmt: el.MaxTransactionAmount,
         LimitCodeDesc: el.LimitCodeDesc,
@@ -304,7 +303,7 @@ function TransactionLimit() {
     <MDSnackbar
       color="error"
       icon="warning"
-      title="Validate Own Transfer"
+      title="Create Transaction Limit"
       content={errorMessage}
       dateTime="Just Now"
       open={errorSB}
@@ -381,7 +380,7 @@ function TransactionLimit() {
                     {renderSuccessSB}
                   </Grid>
 
-                  <Grid item xs={12} sm={6} lg={6}>
+                  {/* <Grid item xs={12} sm={6} lg={6}>
                     <MDBox mb={2}>
                       <MDInput
                         type="text"
@@ -393,7 +392,7 @@ function TransactionLimit() {
                     </MDBox>
 
                     {renderWarningSB}
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={12} sm={6} lg={6}>
                     <MDBox mb={2}>
                       <MDInput

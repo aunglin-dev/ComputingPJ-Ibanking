@@ -138,7 +138,7 @@ function EditParticular() {
         setSuccessSB(true);
         resetAllStates();
         const navigatedModel = res.data;
-        navigate("/particular/Index", {
+        navigate("/particularlist/Index", {
           state: true,
         });
         console.log("NavigatedModel_____________", navigatedModel);
@@ -249,7 +249,7 @@ function EditParticular() {
     <MDSnackbar
       color="error"
       icon="warning"
-      title="Validate Own Transfer"
+      title="Edit Particular "
       content={errorMessage}
       dateTime="Just Now"
       open={errorSB}

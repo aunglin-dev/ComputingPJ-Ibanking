@@ -306,7 +306,7 @@ function CreateSchemeCode() {
       color="success"
       icon="check"
       title="SchemeCode Created"
-      content="Transaction Limit Saved Successfully"
+      content="New SchemeCode  Saved Successfully"
       dateTime="Just Now"
       open={successSB}
       onClose={closeSuccessSB}

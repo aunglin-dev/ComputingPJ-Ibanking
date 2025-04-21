@@ -13,18 +13,19 @@ export const createTransactionLimit = async (req, res) => {
       limitType,
       minAmount,
       maxAmount,
-      rate,
+
       description,
     } = req.body;
 
     // Validate input
-    if (!limitCode || !minAmount || !maxAmount || !rate) {
+    if (!limitCode || !minAmount || !maxAmount) {
       await transaction.rollback();
       return res.status(400).json({ message: "Missing required fields" });
     }
 
+    console.log("Minimum Amount", minAmount, "Maximum Account", maxAmount);
     //Check MinAmt > MaxAMount
-    if (minAmount >= maxAmount) {
+    if (minAmount > maxAmount) {
       await transaction.rollback();
       return res
         .status(400)
@@ -86,7 +87,6 @@ export const createTransactionLimit = async (req, res) => {
         MinTransactionAmount: minAmount,
         MaxTransactionAmount: maxAmount,
         LimitType: limitType,
-        Rate: rate,
         CreatedDate: new Date(),
         CreatedUserId: adminId,
       },
@@ -168,12 +168,7 @@ export const updateTransactionLimit = async (req, res) => {
     }
 
     //Check Required Field
-    if (
-      Object.keys(body).length === 0 ||
-      !body.minAmount ||
-      !body.maxAmount ||
-      !body.rate
-    ) {
+    if (Object.keys(body).length === 0 || !body.minAmount || !body.maxAmount) {
       return res.status(400).json({ message: "No fields to update" });
     }
 
@@ -216,7 +211,7 @@ export const updateTransactionLimit = async (req, res) => {
         Currency: body.currency,
         MinTransactionAmount: body.minAmount,
         MaxTransactionAmount: body.maxAmount,
-        Rate: body.rate,
+
         LimitCodeDesc: body.description,
         CreatedUserId: body.adminId,
         LimitType: body.limitType,
